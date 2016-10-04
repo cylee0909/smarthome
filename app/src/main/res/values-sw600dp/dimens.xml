@@ -1,0 +1,21 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="top_bar_height">72dp</dimen>
+    <dimen name="title_text_size">28sp</dimen>
+    <dimen name="ac_top_container_height">320dp</dimen>
+    <dimen name="ac_top_item_height">260dp</dimen>
+    <dimen name="text_level_1">28sp</dimen>
+    <dimen name="text_level_2">26sp</dimen>
+    <dimen name="text_level_3">24sp</dimen>
+    <dimen name="text_level_4">20sp</dimen>
+    <dimen name="text_level_5">18sp</dimen>
+    <dimen name="ac_medium_bar_height">100dp</dimen>
+    <dimen name="ac_medium_img_height">40dp</dimen>
+    <dimen name="item_margin">12dp</dimen>
+    <dimen name="item_margin_2">15dp</dimen>
+    <dimen name="item_margin_3">18dp</dimen>
+    <dimen name="item_margin_4">20dp</dimen>
+    <dimen name="item_margin_5">26dp</dimen>
+    <dimen name="item_margin_6">32dp</dimen>
+    <dimen name="list_item_height">78dp</dimen>
+</resources>

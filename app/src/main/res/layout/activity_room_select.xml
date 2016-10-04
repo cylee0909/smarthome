@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#e2eaef">
+    <LinearLayout
+        android:id="@+id/ars_title_container_linear"
+        android:layout_alignParentTop="true"
+        android:layout_height="@dimen/top_bar_height"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/main_color">
+        <com.babt.smarthome.widget.StateImageView
+            android:id="@+id/ars_exit"
+            android:layout_height="match_parent"
+            android:layout_width="@dimen/top_bar_height"
+            android:gravity="center"
+            android:padding="12dp"
+            android:src="@drawable/back_icon"/>
+        <TextView
+            android:id="@+id/ars_title"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textSize="@dimen/title_text_size"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:text="房间选择"/>
+        <com.babt.smarthome.widget.StateImageView
+            android:id="@+id/ars_people"
+            android:layout_width="@dimen/top_bar_height"
+            android:layout_height="@dimen/top_bar_height"
+            android:padding="14dp"
+            android:src="@drawable/people_icon"/>
+    </LinearLayout>
+    <ListView
+        android:id="@+id/ars_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="@android:color/transparent"
+        android:listSelector="@android:color/transparent">
+    </ListView>
+</LinearLayout>

@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_bg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/aac_title_container_linear"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_bar_height"
+        android:layout_alignParentTop="true"
+        android:background="@color/main_color"
+        android:orientation="horizontal">
+
+        <com.babt.smarthome.widget.StateImageView
+            android:id="@+id/aac_exit"
+            android:layout_width="@dimen/top_bar_height"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="12dp"
+            android:src="@drawable/back_icon" />
+
+        <TextView
+            android:id="@+id/aac_title"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="空气净化"
+            android:textColor="@color/white"
+            android:textSize="@dimen/title_text_size" />
+
+        <ImageView
+            android:layout_width="@dimen/top_bar_height"
+            android:layout_height="@dimen/top_bar_height"
+            android:padding="14dp"
+            android:src="@drawable/people_icon" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ac_top_container_height"
+        android:background="@color/main_color"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="@dimen/ac_top_item_height"
+            android:layout_height="@dimen/ac_top_item_height"
+            android:layout_gravity="center"
+            android:background="@drawable/air_clean_bg"
+            android:paddingBottom="@dimen/item_margin_6"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="空气质量"
+                android:textColor="#1562bc"
+                android:textSize="@dimen/text_level_1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:layout_marginTop="6dp"
+                android:text="优"
+                android:textColor="#97d71c"
+                android:textSize="@dimen/text_level_1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/aac_pm_tip"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="室内\n-ug/m3"
+                    android:textColor="#1562bc"
+                    android:paddingLeft="@dimen/item_margin_6"
+                    android:textSize="@dimen/text_level_4" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:background="#1562bc" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="室外\n-ug/m3"
+                    android:textColor="#1562bc"
+                    android:paddingRight="@dimen/item_margin_5"
+                    android:textSize="@dimen/text_level_4" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ac_medium_bar_height">
+
+        <LinearLayout
+            android:id="@+id/ac_m_left_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@drawable/ac_medium_btn_bg_sel">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="@dimen/ac_medium_img_height"
+                    android:layout_height="@dimen/ac_medium_img_height"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ac_tmp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_level_4"
+                    android:text="温度"
+                    android:layout_marginTop="@dimen/item_margin"
+                    android:textColor="@color/white"/>
+            </LinearLayout>
+            <TextView
+                android:id="@+id/aac_tmp_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginLeft="@dimen/item_margin"
+                android:textSize="@dimen/text_level_2"
+                android:textColor="@color/white"
+                android:text="--°C"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ac_m_right_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@drawable/ac_medium_btn_bg_sel">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="@dimen/ac_medium_img_height"
+                    android:layout_height="@dimen/ac_medium_img_height"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ac_hdy"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_level_4"
+                    android:text="湿度"
+                    android:layout_marginTop="@dimen/item_margin"
+                    android:textColor="@color/white"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginLeft="@dimen/item_margin"
+                android:textSize="@dimen/text_level_2"
+                android:textColor="@color/white"
+                android:text="--"
+                android:id="@+id/aac_hdy_tip" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <com.babt.smarthome.widget.StateLinearLayout
+                android:id="@+id/ac_auto_run_container"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:background="@drawable/ac_item_bg_sel"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/air_auto_run"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#535151"
+                    android:layout_marginTop="@dimen/item_margin"
+                    android:textSize="@dimen/text_level_2"
+                    android:text="自动运行"/>
+            </com.babt.smarthome.widget.StateLinearLayout>
+            <com.babt.smarthome.widget.StateLinearLayout
+                android:id="@+id/ac_leave_container"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:background="@drawable/ac_item_bg_sel"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ac_leave"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#535151"
+                    android:layout_marginTop="@dimen/item_margin"
+                    android:textSize="@dimen/text_level_2"
+                    android:text="离家模式"/>
+            </com.babt.smarthome.widget.StateLinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <com.babt.smarthome.widget.StateLinearLayout
+                android:id="@+id/ac_heat_container"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:background="@drawable/ac_item_bg_sel"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ac_heat"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#535151"
+                    android:layout_marginTop="@dimen/item_margin"
+                    android:textSize="@dimen/text_level_2"
+                    android:text="辅助加热"/>
+            </com.babt.smarthome.widget.StateLinearLayout>
+            <com.babt.smarthome.widget.StateLinearLayout
+                android:id="@+id/ac_select_container"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:background="@drawable/ac_item_bg_sel"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ac_select"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#535151"
+                    android:layout_marginTop="@dimen/item_margin"
+                    android:textSize="@dimen/text_level_2"
+                    android:text="房间选择"/>
+            </com.babt.smarthome.widget.StateLinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

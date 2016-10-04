@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item >
+        <bitmap android:src="@drawable/welcom_bg"/>
+    </item>
+    <item android:top="60dp">
+        <bitmap
+            android:gravity="top"
+            android:src="@drawable/logo" />
+    </item>
+
+    <item>
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/welcom_text" />
+    </item>
+
+    <item android:bottom="100dp" >
+        <bitmap
+            android:gravity="bottom|center_horizontal"
+            android:src="@drawable/logo_text" />
+    </item>
+</layer-list>

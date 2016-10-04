@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="main_color">#16a2f4</color>
+    <color name="main_bg">#e2eaef</color>
+    <color name="function_list_item_title">#5f6264</color>
+    <color name="function_list_item_desc">#adadad</color>
+    <color name="ac_medium_btn_normal">#4abdff</color>
+    <color name="ac_medium_btn_pressed">#1492dc</color>
+    <color name="ac_item_pressed">#c2cacf</color>
+</resources>
