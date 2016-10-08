@@ -12,6 +12,8 @@ import com.cylee.socket.tcp.TcpSocket
 import com.cylee.socket.tcp.TimeTcpCheckSocket
 import java.net.DatagramPacket
 import java.net.InetSocketAddress
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 
 /**
@@ -25,6 +27,16 @@ object SocketManager {
     var listener : InitListener? = null
     var initRunnable  = InitRunnable()
     var retry : Boolean = false
+    var envWork = AskEnvRunnable()
+    var lock = ReentrantLock()
+
+    var envData = EnvData()
+    get() {
+        lock.withLock {
+            return field
+        }
+    }
+
     fun init() {
         handler = Handler(Looper.getMainLooper())
         TaskUtils.doRapidWorkAndPost(object : Worker() {
@@ -81,6 +93,7 @@ object SocketManager {
                                 override fun onConnect(socket: TcpSocket?) {
                                     Log.d("socket init success!")
                                     listener?.onInitSuccess()
+                                    TaskUtils.postOnMain(envWork)
                                 }
 
                                 override fun onConnectFail(errCode: Int) {
@@ -103,5 +116,47 @@ object SocketManager {
     interface InitListener {
         fun onInitSuccess()
         fun onInitFail()
+    }
+
+
+    class AskEnvRunnable : Worker() {
+        override fun work() {
+            SocketManager.sendString("ASK_T", object : TimeCheckSocket.AbsTimeSocketListener() {
+                override fun onError(errorCode: Int) {
+                    TaskUtils.postOnMain(this@AskEnvRunnable, 1000)
+                }
+                override fun onSuccess(data: String?) {
+                    //PMTDH-12-00-12-00-23-17
+                    if (data?.matches(Regex("PMTDH(-\\w{2}){6}")) ?: false) {
+                        var items = data?.split('-')
+                        if (items != null) {
+                            var tmp = 0 ; var pm = 0; var hdy = 0
+                            if (items.size >= 2) {
+                                hdy = Integer.parseInt(items.get(1), 16)
+                            }
+                            if (items.size >= 4) {
+                                var pmStr = items.get(2) + items.get(3);
+                                pm = Integer.parseInt(pmStr, 16)
+                            }
+                            if (items.size >= 6) {
+                                tmp = Integer.parseInt(items.get(5), 16)
+                            }
+                            lock.withLock {
+                                envData.hdy = hdy
+                                envData.pm = pm
+                                envData.tmp = tmp
+                            }
+                        }
+                    }
+                    TaskUtils.postOnMain(this@AskEnvRunnable, 10000)
+                }
+            })
+        }
+    }
+
+    class EnvData {
+        var tmp = 0;
+        var hdy = 0;
+        var pm = 0;
     }
 }

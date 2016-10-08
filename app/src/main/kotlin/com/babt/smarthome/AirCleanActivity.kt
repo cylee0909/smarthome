@@ -134,39 +134,10 @@ class AirCleanActivity :BaseActivity() , View.OnClickListener {
     inner class AskEnvRunnable : Worker() {
         override fun work() {
             if (paused) return
-            SocketManager.sendString("ASK_T", object : TimeCheckSocket.AbsTimeSocketListener() {
-                override fun onError(errorCode: Int) {
-                    TaskUtils.postOnMain(this@AskEnvRunnable, 1000)
-                }
-                override fun onRawData(rawData: DatagramPacket?) {
-                }
-                override fun onSuccess(data: String?) {
-                    //PMTDH-12-00-12-00-23-17
-                    if (data?.matches(Regex("PMTDH(-\\w{2}){6}")) ?: false) {
-                        var items = data?.split('-')
-                        if (items != null) {
-                            var tmp = 0 ; var pm = 0; var hdy = 0
-                            if (items.size >= 2) {
-                                hdy = Integer.parseInt(items.get(1), 16)
-                            }
-                            if (items.size >= 4) {
-                                var pmStr = items.get(2) + items.get(3);
-                                pm = Integer.parseInt(pmStr, 16)
-                            }
-                            if (items.size >= 6) {
-                                tmp = Integer.parseInt(items.get(5), 16)
-                            }
-
-                            onUiThread {
-                                mTmpText?.setText(tmp.toString()+"°C")
-                                mHdyText?.setText(hdy.toString()+"%")
-                                mPmText?.setText(String.format("室内\n%dug/m3", pm))
-                            }
-                        }
-                    }
-                    TaskUtils.postOnMain(this@AskEnvRunnable, 5000)
-                }
-            })
+            var envData = SocketManager.envData
+            mTmpText?.setText(envData.tmp.toString()+"°C")
+            mHdyText?.setText(envData.hdy.toString()+"%")
+            mPmText?.setText(String.format("室内\n%dug/m3", envData.pm))
         }
     }
 }
