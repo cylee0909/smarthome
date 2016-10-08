@@ -290,7 +290,7 @@ class RoomDetailActivity : BaseActivity() , View.OnClickListener{
                             }
                         }
                     }
-                    TaskUtils.postOnMain(this@AskEnvRunnable, 1000)
+                    TaskUtils.postOnMain(this@AskEnvRunnable, 5000)
                 }
             })
         }

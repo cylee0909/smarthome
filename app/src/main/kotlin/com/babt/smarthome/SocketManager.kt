@@ -61,8 +61,10 @@ object SocketManager {
             handler?.removeCallbacks(this)
             Log.d("init runnable run , initCount = "+ initCount)
             if (retry || (!isInitSuccess() && initCount < 20)) {
+//                DialogUtil.showToast(BaseApplication.getApplication(), "发ASKIP请求", false)
                 mAddressSocket?.sendString("ASKIP0", object : TimeCheckSocket.AbsTimeSocketListener() {
                     override fun onError(errorCode: Int) {
+//                        DialogUtil.showToast(BaseApplication.getApplication(), "UDP连接失败", false)
                         initCount ++
                         handler?.postDelayed(this@InitRunnable, 500)
                     }
@@ -73,6 +75,7 @@ object SocketManager {
 
                     override fun onRawData(rawData: DatagramPacket?) {
                         if (rawData != null) {
+//                            DialogUtil.showToast(BaseApplication.getApplication(), "ip连接: "+rawData.address.hostAddress, false)
                             mDataSocket = TimeTcpCheckSocket(true);
                             mDataSocket?.connect(rawData.address.hostAddress, 8000, object : ITcpConnectListener{
                                 override fun onConnect(socket: TcpSocket?) {
@@ -81,6 +84,7 @@ object SocketManager {
                                 }
 
                                 override fun onConnectFail(errCode: Int) {
+//                                    DialogUtil.showToast(BaseApplication.getApplication(), "TCP连接失败 : "+errCode, false)
                                     initCount ++
                                     handler?.postDelayed(this@InitRunnable, 500)
                                 }
