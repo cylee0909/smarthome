@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_bg">
+    <LinearLayout
+        android:id="@+id/aat_title_container_linear"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_bar_height"
+        android:layout_alignParentTop="true"
+        android:background="@color/main_color"
+        android:orientation="horizontal">
+
+        <com.babt.smarthome.widget.StateImageView
+            android:id="@+id/aat_exit"
+            android:layout_width="@dimen/top_bar_height"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="12dp"
+            android:src="@drawable/back_icon" />
+
+        <TextView
+            android:id="@+id/aat_title"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="新增定时"
+            android:textColor="@color/white"
+            android:textSize="@dimen/title_text_size" />
+
+        <ImageView
+            android:layout_width="@dimen/top_bar_height"
+            android:layout_height="@dimen/top_bar_height"
+            android:padding="14dp"
+            android:src="@drawable/people_icon" />
+    </LinearLayout>
+
+    <com.babt.smarthome.widget.StateTextView
+        android:id="@+id/aat_date_text"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="@dimen/item_margin"
+        android:layout_marginRight="@dimen/item_margin"
+        android:layout_marginTop="@dimen/item_margin"
+        android:layout_height="@dimen/list_item_height"
+        android:background="@drawable/add_time_item_bg"
+        android:text="选择日期"
+        android:textSize="@dimen/text_level_1"
+        android:textColor="@color/material_blue_grey_800"
+        android:gravity="center"/>
+    <com.babt.smarthome.widget.StateTextView
+        android:id="@+id/aat_time_text"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="@dimen/item_margin"
+        android:layout_marginRight="@dimen/item_margin"
+        android:layout_marginTop="@dimen/item_margin"
+        android:layout_height="@dimen/list_item_height"
+        android:background="@drawable/add_time_item_bg"
+        android:text="选择时间"
+        android:textSize="@dimen/text_level_1"
+        android:textColor="@color/material_blue_grey_800"
+        android:gravity="center"/>
+    <com.babt.smarthome.widget.StateTextView
+        android:id="@+id/aat_action_text"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="@dimen/item_margin"
+        android:layout_marginRight="@dimen/item_margin"
+        android:layout_marginTop="@dimen/item_margin"
+        android:layout_height="@dimen/list_item_height"
+        android:background="@drawable/add_time_item_bg"
+        android:text="设置动作"
+        android:textSize="@dimen/text_level_1"
+        android:textColor="@color/material_blue_grey_800"
+        android:gravity="center"/>
+    <com.babt.smarthome.widget.StateTextView
+        android:id="@+id/aat_repeat_text"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="@dimen/item_margin"
+        android:layout_marginRight="@dimen/item_margin"
+        android:layout_marginTop="@dimen/item_margin"
+        android:layout_height="@dimen/list_item_height"
+        android:background="@drawable/add_time_item_bg"
+        android:text="重复次数"
+        android:textSize="@dimen/text_level_1"
+        android:textColor="@color/material_blue_grey_800"
+        android:gravity="center"/>
+    <com.babt.smarthome.widget.StateTextView
+        android:id="@+id/aat_confirm_text"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="@dimen/item_margin"
+        android:layout_marginRight="@dimen/item_margin"
+        android:layout_marginTop="@dimen/item_margin"
+        android:layout_height="@dimen/list_item_height"
+        android:background="@drawable/add_time_confirm_bg"
+        android:text="确定新增"
+        android:textSize="@dimen/text_level_1"
+        android:textColor="@color/white"
+        android:gravity="center"/>
+</LinearLayout>

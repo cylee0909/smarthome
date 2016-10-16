@@ -21,6 +21,8 @@
         <activity android:name=".AirCleanActivity"/>
         <activity android:name=".RoomSelectActivity"/>
         <activity android:name=".RoomDetailActivity"/>
+        <activity android:name=".SetTimeListActivity"/>
+        <activity android:name=".AddTimeActivity" android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
     </application>
 
 </manifest>

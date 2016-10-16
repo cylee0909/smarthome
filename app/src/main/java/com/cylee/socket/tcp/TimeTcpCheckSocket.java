@@ -9,7 +9,7 @@ import java.util.Map;
  * Created by cylee on 16/9/25.
  */
 public class TimeTcpCheckSocket extends TcpSocket {
-    private static final int DEFAULT_TIMEOUT = 10000; // 10s
+    private static final int DEFAULT_TIMEOUT = 3000; // 3s
     private static final int ERROR_DATA_INVALID = -1;
     private static final int ERROR_SEND_ERROR = -2;
     private static final int ERROR_TIME_OUT = -3;
@@ -37,20 +37,25 @@ public class TimeTcpCheckSocket extends TcpSocket {
             }
             return;
         }
-
-        String id = createRequestId();
-        PacketBindData pb = new PacketBindData();
-        pb.senTime = System.currentTimeMillis();
-        pb.mSendId = id;
-        pb.mListener = listener;
-        mBindDataMap.put(id, pb);
-
-        data = correctLength(data, id);
+        PacketBindData oldData = mBindDataMap.get(data);
+        if (oldData == null) {
+            String id = createRequestId();
+            oldData = new PacketBindData();
+            oldData.senTime = System.currentTimeMillis();
+            oldData.mSendId = id;
+            oldData.mListener = listener;
+            mBindDataMap.put(id, oldData);
+            data = correctLength(data, id);
+            oldData.mSendData = data;
+        } else {
+            oldData.senTime = System.currentTimeMillis();
+            data = oldData.mSendData;
+        }
 
         try {
             super.send(data);
         } catch (Exception e) {
-            mBindDataMap.remove(pb.mSendId);
+            mBindDataMap.remove(oldData.mSendId);
             if (listener != null) {
                 listener.onError(ERROR_SEND_ERROR);
             }
@@ -100,6 +105,16 @@ public class TimeTcpCheckSocket extends TcpSocket {
         return mSocket != null && mSocket.isConnected();
     }
 
+    public void disConnect() {
+        stop();
+        if (mSocket != null) {
+            try {
+                mSocket.close();
+            } catch (Exception e) {
+            }
+        }
+    }
+
     private synchronized String createRequestId() {
         mId ++;
         mId %= 0xFF;
@@ -109,6 +124,8 @@ public class TimeTcpCheckSocket extends TcpSocket {
     static class PacketBindData {
         public long senTime;
         public String mSendId;
+        public int mRetryCount;
+        public String mSendData;
         public BaseTimeSocketListener mListener;
     }
 
@@ -127,9 +144,14 @@ public class TimeTcpCheckSocket extends TcpSocket {
                         String id = iterator.next();
                         PacketBindData pb = mBindDataMap.get(id);
                         if (pb.senTime + mTimeOut <= System.currentTimeMillis()) {
-                            iterator.remove();
-                            if (pb.mListener != null) {
-                                pb.mListener.onError(ERROR_TIME_OUT);
+                            if (pb.mRetryCount > 2) {
+                                iterator.remove();
+                                if (pb.mListener != null) {
+                                    pb.mListener.onError(ERROR_TIME_OUT);
+                                }
+                            } else {
+                                pb.mRetryCount++;
+                                sendString(pb.mSendId, pb.mListener);
                             }
                         }
                     }

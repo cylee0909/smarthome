@@ -15,7 +15,7 @@ import java.util.Map;
  * Created by cylee on 16/9/25.
  */
 public class TimeCheckSocket extends UdpSocket {
-    private static final int DEFAULT_TIMEOUT = 6000; // 6s
+    private static final int DEFAULT_TIMEOUT = 10000; // 10s
     private static final int ERROR_DATA_INVALID = -1;
     private static final int ERROR_SEND_ERROR = -2;
     private static final int ERROR_TIME_OUT = -3;

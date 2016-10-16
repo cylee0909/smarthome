@@ -87,6 +87,11 @@ public class UdpSocket {
         mDatagramSocket.receive(packet);
     }
 
+    public void disConnect() {
+        stop();
+        mDatagramSocket.close();
+    }
+
     private void checkSocket() {
         if (mDatagramSocket == null) {
             throw new RuntimeException("Socket must not be null");

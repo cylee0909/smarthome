@@ -98,7 +98,9 @@ class RoomDetailActivity : BaseActivity() , View.OnClickListener{
 
     override fun onClick(v: View?) {
         when(v?.id) {
-            R.id.ard_set_time_text -> {}
+            R.id.ard_set_time_text -> {
+                startActivity(SetTimeListActivity.createIntent(this, mCurrentId))
+            }
             R.id.ard_start_icon -> {
                 var command = if (mStarted)  "DESMB" else "SETMB"
                 dialogUtil.showWaitingDialog(this, "正在操作...", true)

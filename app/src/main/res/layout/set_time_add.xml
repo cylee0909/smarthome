@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.babt.smarthome.widget.StateLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="@dimen/list_item_height"
+    android:background="@color/white">
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:textColor="@color/material_blue_grey_900"
+    android:textSize="@dimen/text_level_1"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:text="新增定时"/>
+</com.babt.smarthome.widget.StateLinearLayout>

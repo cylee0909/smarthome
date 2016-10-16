@@ -1,5 +1,7 @@
 package com.cylee.socket.tcp;
 
+import com.babt.smarthome.SocketManager;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -13,12 +15,14 @@ public class TcpSocketWriter implements Runnable{
     private volatile boolean mStoped;
     private LinkedBlockingQueue<String> mDatas;
     private BufferedWriter mBW;
+    private TcpSocket mSocket;
 
     TcpSocketWriter(TcpSocket socket, LinkedBlockingQueue<String> packets) throws Exception {
         mDatas = packets;
         mBW = new BufferedWriter(
                 new OutputStreamWriter(socket.mSocket.getOutputStream()));
         mStoped = false;
+        mSocket = socket;
     }
 
     public void stop() {
@@ -36,6 +40,12 @@ public class TcpSocketWriter implements Runnable{
     public void run() {
         while (!mStoped) {
             try {
+                try {
+                    mSocket.mSocket.sendUrgentData(0xFF);
+                } catch (Exception e) {
+                    SocketManager.INSTANCE.reconnect();
+                    break;
+                }
                 String packet = mDatas.take();
                 if (packet != null) {
                     mBW.write(packet);

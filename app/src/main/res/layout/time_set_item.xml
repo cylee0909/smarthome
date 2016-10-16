@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.babt.smarthome.widget.StateLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:paddingLeft="@dimen/item_margin_2"
+    android:layout_height="@dimen/list_item_height">
+<LinearLayout
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:layout_weight="1">
+    <TextView
+        android:id="@+id/tsi_top_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_level_3"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textColor="@color/material_blue_grey_800"
+        tools:text="1.星期三, 14.24, close, 执行一次"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_level_4"
+        android:layout_marginTop="@dimen/item_margin"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:drawableLeft="@drawable/icon_clock"
+        tools:text="2016-08-07 14:22:27"
+        android:drawablePadding="@dimen/item_margin"
+        android:textColor="@color/material_blue_grey_900"
+        android:id="@+id/tsi_bottom_text" />
+</LinearLayout>
+    <TextView
+        android:id="@+id/tsi_del_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="删除"
+        android:textSize="@dimen/text_level_4"
+        android:textColor="@color/white"
+        android:layout_marginLeft="@dimen/item_margin"
+        android:layout_marginRight="@dimen/item_margin"
+        android:background="@drawable/time_set_bn_bg_sel"
+        android:paddingTop="@dimen/item_margin"
+        android:paddingBottom="@dimen/item_margin"
+        android:paddingLeft="@dimen/item_margin_4"
+        android:paddingRight="@dimen/item_margin_4"/>
+</com.babt.smarthome.widget.StateLinearLayout>
