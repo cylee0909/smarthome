@@ -63,11 +63,11 @@ class SetTimeListActivity : Activity() {
             times.forEach {
                 it.nextDate = HomeUtil.getNextDateByWeek(it.week, it.time)
             }
+            Collections.sort(times, {
+                a, b ->
+                return@sort (a.createTime - b.createTime).toInt()
+            })
         }
-        Collections.sort(times, {
-            a, b ->
-            return@sort (a.createTime - b.createTime).toInt()
-        })
     }
 
     override fun onStop() {

@@ -15,7 +15,6 @@ import com.cylee.lib.widget.dialog.DialogUtil
 import com.cylee.socket.TimeCheckSocket
 import org.jetbrains.anko.find
 import org.jetbrains.anko.onUiThread
-import java.net.DatagramPacket
 
 /**
  * Created by cylee on 16/9/27.
@@ -42,6 +41,7 @@ class RoomDetailActivity : BaseActivity() , View.OnClickListener{
     var mStartIcon :ImageView? = null
     var mTitleText : TextView? = null
     var askEnvWork = AskEnvRunnable()
+    var checkLevelWork = CheckLevelRunnable()
     var mStarted = false
     var mCurrentId = -1
 
@@ -111,7 +111,7 @@ class RoomDetailActivity : BaseActivity() , View.OnClickListener{
                             mStarted = !mStarted
                             refreshStartState()
                             if (mStarted) {
-                                checkLevel()
+                                TaskUtils.postOnMain(checkLevelWork)
                             }
                         }
                     }
@@ -207,24 +207,12 @@ class RoomDetailActivity : BaseActivity() , View.OnClickListener{
 
     override fun onStart() {
         super.onStart()
-        checkLevel()
+        TaskUtils.postOnMain(checkLevelWork)
     }
 
-    fun checkLevel() {
-        SocketManager.sendString("ASKMB"+getChannelFromPosition(mCurrentId), object : TimeCheckSocket.AbsTimeSocketListener() {
-            override fun onSuccess(data: String?) {
-                if (data != null && data.matches(Regex("RETMB-MB=8\\d"))) {
-                    var level = (data.get(10) - '0').toInt()
-                    onUiThread {
-                        refreshLevel(level)
-                    }
-                }
-            }
-
-            override fun onRawData(rawData: DatagramPacket?) {
-                super.onRawData(rawData)
-            }
-        })
+    override fun onStop() {
+        super.onStop()
+        TaskUtils.removePostedWork(checkLevelWork)
     }
 
     fun refreshLevel(level : Int) {
@@ -268,6 +256,29 @@ class RoomDetailActivity : BaseActivity() , View.OnClickListener{
             mTmpText?.setText(envData.tmp.toString()+"°C")
             mHdyText?.setText(envData.hdy.toString()+"%")
             mPmTipText?.setText(String.format("PM2.5  %dug/m3", envData.pm))
+            TaskUtils.postOnMain(this, 10000)
+        }
+    }
+
+    inner class CheckLevelRunnable : Worker() {
+        override fun work() {
+            TaskUtils.removePostedWork(this)
+            SocketManager.sendString("ASKMB"+getChannelFromPosition(mCurrentId), object : TimeCheckSocket.AbsTimeSocketListener() {
+                override fun onSuccess(data: String?) {
+                    if (data != null && data.matches(Regex("RETMB-MB=8\\d"))) {
+                        var level = (data.get(10) - '0').toInt()
+                        onUiThread {
+                            refreshLevel(level)
+                        }
+                    }
+                    TaskUtils.postOnMain(this@CheckLevelRunnable, 5000)
+                }
+
+                override fun onError(errorCode: Int) {
+                    super.onError(errorCode)
+                    TaskUtils.postOnMain(this@CheckLevelRunnable, 5000)
+                }
+            })
         }
     }
 }

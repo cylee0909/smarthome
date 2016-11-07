@@ -1,7 +1,5 @@
 package com.cylee.socket.tcp;
 
-import com.babt.smarthome.SocketManager;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -40,12 +38,12 @@ public class TcpSocketWriter implements Runnable{
     public void run() {
         while (!mStoped) {
             try {
-                try {
-                    mSocket.mSocket.sendUrgentData(0xFF);
-                } catch (Exception e) {
-                    SocketManager.INSTANCE.reconnect();
-                    break;
-                }
+//                try {
+//                    mSocket.mSocket.sendUrgentData(0xFF);
+//                } catch (Exception e) {
+//                    SocketManager.INSTANCE.reconnect();
+//                    continue;
+//                }
                 String packet = mDatas.take();
                 if (packet != null) {
                     mBW.write(packet);

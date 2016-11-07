@@ -138,6 +138,7 @@ class AirCleanActivity :BaseActivity() , View.OnClickListener {
             mTmpText?.setText(envData.tmp.toString()+"°C")
             mHdyText?.setText(envData.hdy.toString()+"%")
             mPmText?.setText(String.format("室内\n%dug/m3", envData.pm))
+            TaskUtils.postOnMain(this, 10000)
         }
     }
 }
