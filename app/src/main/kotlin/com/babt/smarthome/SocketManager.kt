@@ -34,6 +34,7 @@ object SocketManager {
     var timeWord = TimeRunnable()
     var lock = ReentrantLock()
     var lastTimeCheck = ""
+    var pantErrorCount = 0
 
     var envData = EnvData()
         get() {
@@ -44,6 +45,7 @@ object SocketManager {
 
     fun init() {
         initCount = 0
+        pantErrorCount = 0
         handler = Handler(Looper.getMainLooper())
         TaskUtils.doRapidWorkAndPost(object : Worker() {
             override fun work() {
@@ -199,10 +201,15 @@ object SocketManager {
         override fun work() {
             SocketManager.sendString("ASK_T", object : TimeCheckSocket.AbsTimeSocketListener() {
                 override fun onError(errorCode: Int) {
-                    TaskUtils.postOnMain(this@AskEnvRunnable, 1000)
+                    TaskUtils.postOnMain(this@AskEnvRunnable, 10000)
+                    pantErrorCount++
+                    if (pantErrorCount >= 5) {
+                        reconnect()
+                    }
                 }
 
                 override fun onSuccess(data: String?) {
+                    pantErrorCount = 0
                     //PMTDH-12-00-12-00-23-17
                     if (data?.matches(Regex("PMTDH(-\\w{2}){6}")) ?: false) {
                         var items = data?.split('-')
