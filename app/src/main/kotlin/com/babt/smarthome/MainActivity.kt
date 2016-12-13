@@ -7,7 +7,9 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import cn.csnbgsh.herbarium.bind
+import com.android.volley.toolbox.StringRequest
 import com.cylee.androidlib.base.BaseActivity
+import com.cylee.androidlib.net.Net
 import com.cylee.androidlib.util.DateUtils
 import com.cylee.androidlib.util.SimpleLunarCalendar
 import com.cylee.lib.widget.dialog.DialogUtil
@@ -15,7 +17,7 @@ import org.jetbrains.anko.find
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainActivity : BaseActivity() {
+class MainActivity : AppBaseActivity() {
     companion object {
         val DATE_FORMAT = SimpleDateFormat("yyyy年MM月dd日")
         fun createIntent(context : Context):Intent {
@@ -41,6 +43,11 @@ class MainActivity : BaseActivity() {
         var date = Date()
         mDateCnText?.setText("农历"+SimpleLunarCalendar(date).noYearDate+"    "+DateUtils.getWeekOfDate(date))
         mDateText?.setText(DATE_FORMAT.format(date))
+
+        find<View>(R.id.am_people_img).setOnLongClickListener {
+            startActivity(NetSetActivity.createIntent(this@MainActivity))
+            return@setOnLongClickListener true
+        }
     }
 
 
@@ -61,7 +68,7 @@ class MainActivity : BaseActivity() {
             override fun OnRightButtonClick() {
                 SocketManager.retry(object : SocketManager.InitListener {
                     override fun onInitSuccess() {
-                        DialogUtil.showToast(this@MainActivity, "设备连接成功", false)
+//                        DialogUtil.showToast(this@MainActivity, "设备连接成功", false)
                     }
 
                     override fun onInitFail() {

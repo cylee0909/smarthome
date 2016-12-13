@@ -19,7 +19,7 @@ import org.jetbrains.anko.onUiThread
 /**
  * Created by cylee on 16/9/27.
  */
-class RoomDetailActivity : BaseActivity() , View.OnClickListener{
+class RoomDetailActivity : AppBaseActivity() , View.OnClickListener{
     companion object {
         val INPUT_ROOM_ITEM = "INPUT_ROOM_ITEM"
         fun createIntent(context : Context, roomItem: Rooms.RoomItem): Intent {

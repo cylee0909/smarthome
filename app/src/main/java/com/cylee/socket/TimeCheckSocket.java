@@ -1,5 +1,6 @@
 package com.cylee.socket;
 
+import com.cylee.androidlib.util.Log;
 import com.cylee.socket.tcp.BaseTimeSocketListener;
 import com.cylee.socket.tcp.IConnectListener;
 
@@ -19,7 +20,7 @@ public class TimeCheckSocket extends UdpSocket {
     private static final int ERROR_DATA_INVALID = -1;
     private static final int ERROR_SEND_ERROR = -2;
     private static final int ERROR_TIME_OUT = -3;
-    private int mTimeOut = DEFAULT_TIMEOUT;
+    int mTimeOut = DEFAULT_TIMEOUT;
 
     public Map<String, PacketBindData> mBindDataMap = Collections.synchronizedMap(new HashMap<String, PacketBindData>());
     private int mId;
@@ -55,6 +56,8 @@ public class TimeCheckSocket extends UdpSocket {
         mBindDataMap.put(id, pb);
 
         data = correctLength(data, id);
+
+        Log.d("send data = "+data);
 
         byte[] sendData = data.getBytes();
         try {

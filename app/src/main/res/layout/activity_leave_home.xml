@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_bg">
+    <LinearLayout
+        android:id="@+id/alh_title_container_linear"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_bar_height"
+        android:layout_alignParentTop="true"
+        android:background="@color/main_color"
+        android:orientation="horizontal">
+
+        <com.babt.smarthome.widget.StateImageView
+            android:id="@+id/alh_exit"
+            android:layout_width="@dimen/top_bar_height"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="12dp"
+            android:src="@drawable/back_icon" />
+
+        <TextView
+            android:id="@+id/alh_title"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="离家模式"
+            android:textColor="@color/white"
+            android:textSize="@dimen/title_text_size" />
+
+        <ImageView
+            android:layout_width="@dimen/top_bar_height"
+            android:layout_height="@dimen/top_bar_height"
+            android:padding="14dp"
+            android:src="@drawable/people_icon" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/item_margin_6"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/main_color"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_level_3"
+                android:padding="@dimen/item_margin_4"
+                android:text="离家模式:\n是为用户提供的一种快捷操作方式,选择离家模式系统会立即开启房间所有面板,同时开启通风操作,通风时长用户可以自己选择,系统默认是运行30分钟,运行30分钟后,系统会自动关闭通风,然后关闭房间全部面板"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/white_bg_10"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/item_margin_4"
+                android:layout_marginLeft="@dimen/item_margin_4"
+                android:layout_marginRight="@dimen/item_margin_4"
+                android:padding="@dimen/item_margin">
+                <TextView
+                    android:id="@+id/alh_mode_start_tip_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_level_3"
+                    android:textColor="#4c4c4c"
+                    android:text="1、离家后,5分钟离家模式开始运行"/>
+                <SeekBar
+                    android:id="@+id/alh_seek_mode_start"
+                    android:layout_width="match_parent"
+                    android:max="120"
+                    android:progress="5"
+                    android:thumb="@drawable/seek_thumb"
+                    android:thumbOffset="@dimen/item_margin_2"
+                    android:layout_marginTop="@dimen/item_margin"
+                    android:progressDrawable="@drawable/progress_holo_light"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/white_bg_10"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/item_margin_4"
+                android:layout_marginLeft="@dimen/item_margin_4"
+                android:layout_marginRight="@dimen/item_margin_4"
+                android:padding="@dimen/item_margin">
+                <TextView
+                    android:id="@+id/alh_ion_start_tip_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_level_3"
+                    android:textColor="#4c4c4c"
+                    android:text="2、风机运行后2分钟高能离子开始运行"/>
+                <SeekBar
+                    android:id="@+id/alh_seek_ion_start"
+                    android:layout_width="match_parent"
+                    android:max="9"
+                    android:progress="2"
+                    android:thumb="@drawable/seek_thumb"
+                    android:thumbOffset="@dimen/item_margin_2"
+                    android:layout_marginTop="@dimen/item_margin"
+                    android:progressDrawable="@drawable/progress_holo_light"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/white_bg_10"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/item_margin_4"
+                android:layout_marginLeft="@dimen/item_margin_4"
+                android:layout_marginRight="@dimen/item_margin_4"
+                android:padding="@dimen/item_margin">
+                <TextView
+                    android:id="@+id/alh_ion_stop_tip_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_level_3"
+                    android:textColor="#4c4c4c"
+                    android:text="3、高能离子运行20分钟后停止"/>
+                <SeekBar
+                    android:id="@+id/alh_seek_ion_stop"
+                    android:layout_width="match_parent"
+                    android:max="119"
+                    android:progress="20"
+                    android:thumb="@drawable/seek_thumb"
+                    android:thumbOffset="@dimen/item_margin_2"
+                    android:layout_marginTop="@dimen/item_margin"
+                    android:progressDrawable="@drawable/progress_holo_light"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/white_bg_10"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/item_margin_4"
+                android:layout_marginLeft="@dimen/item_margin_4"
+                android:layout_marginRight="@dimen/item_margin_4"
+                android:padding="@dimen/item_margin">
+                <TextView
+                    android:id="@+id/alh_mode_stop_tip_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_level_3"
+                    android:textColor="#4c4c4c"
+                    android:text="4、高能离子停止后5分钟风机停止,离家模式完成"/>
+                <SeekBar
+                    android:id="@+id/alh_seek_mode_completed"
+                    android:layout_width="match_parent"
+                    android:max="59"
+                    android:progress="5"
+                    android:thumb="@drawable/seek_thumb"
+                    android:thumbOffset="@dimen/item_margin_2"
+                    android:layout_marginTop="@dimen/item_margin"
+                    android:progressDrawable="@drawable/progress_holo_light"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <com.babt.smarthome.widget.StateTextView
+                android:id="@+id/alh_confirm_text"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="@dimen/item_margin"
+                android:layout_marginRight="@dimen/item_margin"
+                android:layout_marginTop="@dimen/item_margin"
+                android:layout_height="@dimen/list_item_height"
+                android:background="@drawable/add_time_confirm_bg"
+                android:text="开启"
+                android:textSize="@dimen/text_level_1"
+                android:textColor="@color/white"
+                android:gravity="center"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

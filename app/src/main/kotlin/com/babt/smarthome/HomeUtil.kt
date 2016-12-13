@@ -65,4 +65,14 @@ object HomeUtil {
         if (p <= 9) return '0' + (p - 0)
         return 'a' + (p - 10)
     }
+
+    fun getPmSetLevel(value : Int):Char {
+        if (value <= 9) return '0' + (value - 0)
+        return 'a' + (value - 10)
+    }
+}
+
+
+inline fun Number.toMinus() : Number {
+    return this.toLong() / 1000 / 60
 }

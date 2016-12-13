@@ -8,7 +8,14 @@ import com.cylee.androidlib.util.PreferenceUtils;
 
 public enum HomePreference implements PreferenceUtils.DefaultValueInterface {
     ROOMS(null),
-    TIMES(null);
+    TIMES(null),
+    NET_INITED(false),
+    PM25(null),
+    SET_PM25(50),
+    AUTO_RUN(false),
+    AUTO_RUN_TIME(0L),
+    CHANGE_FILTER_TIP_TIME(System.currentTimeMillis()),
+    LEAVE_HOME(null);
     HomePreference(Object def) {
         mDef = def;
     }

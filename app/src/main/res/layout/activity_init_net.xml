@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_bg">
+    <LinearLayout
+        android:id="@+id/aat_title_container_linear"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_bar_height"
+        android:layout_alignParentTop="true"
+        android:background="@color/main_color"
+        android:orientation="horizontal">
+
+        <com.babt.smarthome.widget.StateImageView
+            android:id="@+id/aat_exit"
+            android:layout_width="@dimen/top_bar_height"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="12dp"
+            android:src="@drawable/back_icon" />
+
+        <TextView
+            android:id="@+id/aat_title"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="网络设置"
+            android:textColor="@color/white"
+            android:textSize="@dimen/title_text_size" />
+
+        <ImageView
+            android:layout_width="@dimen/top_bar_height"
+            android:layout_height="@dimen/top_bar_height"
+            android:padding="14dp"
+            android:src="@drawable/people_icon" />
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_level_5"
+        android:textColor="@color/material_blue_grey_800"
+        android:padding="@dimen/item_margin"
+        android:text="请先使用当前设备连接ESP8266网络(密码是87673149),然后进行设置"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/item_margin">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WIFI名称"
+            android:textColor="@color/material_blue_grey_800"/>
+        <EditText
+            android:id="@+id/ain_wifi_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/item_margin">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WIFI密码"
+            android:textColor="@color/material_blue_grey_800"/>
+        <EditText
+            android:id="@+id/ain_wifi_passwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"/>
+    </LinearLayout>
+
+    <com.babt.smarthome.widget.StateTextView
+        android:id="@+id/ain_confirm_text"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="@dimen/item_margin"
+        android:layout_marginRight="@dimen/item_margin"
+        android:layout_marginTop="@dimen/item_margin"
+        android:layout_height="@dimen/list_item_height"
+        android:background="@drawable/add_time_confirm_bg"
+        android:text="开始连接"
+        android:textSize="@dimen/text_level_1"
+        android:textColor="@color/white"
+        android:gravity="center"/>
+</LinearLayout>

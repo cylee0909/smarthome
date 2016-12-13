@@ -15,7 +15,7 @@ import java.util.*
 class App : BaseApplication() {
     override fun onCreate() {
         super.onCreate()
-        Log.setLogLevel(if (BuildConfig.DEBUG) Log.VERBOSE else Log.OFF)
+        Log.setLogLevel(if (BuildConfig.DEBUG) Log.OFF else Log.OFF)
         bindSocket()
         redirectLog()
     }

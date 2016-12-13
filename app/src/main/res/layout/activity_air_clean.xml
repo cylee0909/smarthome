@@ -95,6 +95,7 @@
                     android:background="#1562bc" />
 
                 <TextView
+                    android:id="@+id/out_pm_text"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"

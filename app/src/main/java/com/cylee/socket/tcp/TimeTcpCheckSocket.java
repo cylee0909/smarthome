@@ -1,19 +1,24 @@
 package com.cylee.socket.tcp;
 
+import com.cylee.androidlib.util.Log;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * Created by cylee on 16/9/25.
  */
 public class TimeTcpCheckSocket extends TcpSocket {
-    private static final int DEFAULT_TIMEOUT = 3000; // 3s
+    private static final int DEFAULT_TIMEOUT = 5000; // 5s
     private static final int ERROR_DATA_INVALID = -1;
     private static final int ERROR_SEND_ERROR = -2;
     private static final int ERROR_TIME_OUT = -3;
-    private int mTimeOut = DEFAULT_TIMEOUT;
+    int mTimeOut = DEFAULT_TIMEOUT;
 
     public Map<String, PacketBindData> mBindDataMap = Collections.synchronizedMap(new HashMap<String, PacketBindData>());
     private int mId;
@@ -53,6 +58,7 @@ public class TimeTcpCheckSocket extends TcpSocket {
         }
 
         try {
+            Log.d("send data = "+data);
             super.send(data);
         } catch (Exception e) {
             mBindDataMap.remove(oldData.mSendId);
@@ -88,6 +94,7 @@ public class TimeTcpCheckSocket extends TcpSocket {
             String id = receiveData.substring(0, 2);
             PacketBindData pb = mBindDataMap.get(id);
             if (pb != null) {
+                Log.d("command success "+pb.mSendData +" "+receiveData);
                 if (pb.mListener != null) {
                     int endIndex = receiveData.indexOf("^");
                     if (endIndex > 2) {
@@ -130,6 +137,7 @@ public class TimeTcpCheckSocket extends TcpSocket {
     }
 
     class TimeOutChecker implements Runnable {
+        private List<String> removeIds = new ArrayList<>();
         @Override
         public void run() {
             while (!mStoped) {
@@ -138,23 +146,29 @@ public class TimeTcpCheckSocket extends TcpSocket {
                 } catch (InterruptedException e){
                     e.printStackTrace();
                 }
+                removeIds.clear();
                 if (!mBindDataMap.isEmpty()) {
                     Iterator<String> iterator = mBindDataMap.keySet().iterator();
                     while (iterator.hasNext()) {
                         String id = iterator.next();
                         PacketBindData pb = mBindDataMap.get(id);
-                        if (pb.senTime + mTimeOut <= System.currentTimeMillis()) {
+                        if (pb.senTime + mTimeOut <= System.currentTimeMillis()) { // 超时
                             if (pb.mRetryCount > 2) {
-                                iterator.remove();
                                 if (pb.mListener != null) {
                                     pb.mListener.onError(ERROR_TIME_OUT);
                                 }
+                                removeIds.add(id);
                             } else {
                                 pb.mRetryCount++;
+                                Log.d("retry send id = "+pb.mSendId+" "+pb.mSendData);
                                 sendString(pb.mSendId, pb.mListener);
                             }
                         }
                     }
+                    for (String id : removeIds) {
+                        mBindDataMap.remove(id);
+                    }
+                    removeIds.clear();
                 }
             }
         }

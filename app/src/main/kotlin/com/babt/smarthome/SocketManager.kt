@@ -2,7 +2,12 @@ package com.babt.smarthome
 
 import android.os.Handler
 import android.os.Looper
+import com.android.volley.toolbox.StringRequest
+import com.babt.smarthome.entity.LeaveHomeData
+import com.babt.smarthome.entity.Pm25
+import com.babt.smarthome.entity.Rooms
 import com.babt.smarthome.entity.TimeSet
+import com.cylee.androidlib.net.Net
 import com.cylee.androidlib.thread.Worker
 import com.cylee.androidlib.util.Log
 import com.cylee.androidlib.util.PreferenceUtils
@@ -76,7 +81,7 @@ object SocketManager {
         handler?.post(initRunnable)
     }
 
-    fun sendString(data: String, listener: BaseTimeSocketListener) {
+    fun sendString(data: String, listener: BaseTimeSocketListener?) {
         if (mDataSocket != null) {
             mDataSocket?.sendString(data, listener)
         }
@@ -139,6 +144,12 @@ object SocketManager {
         fun onInitFail()
     }
 
+    interface PmChangeListener {
+        fun onChange(pm : String)
+    }
+
+    var pmListener : PmChangeListener? = null
+
     /**
      * 定时任务
      */
@@ -160,8 +171,123 @@ object SocketManager {
                         PreferenceUtils.setObject(HomePreference.TIMES, timeSet)
                     }
                 }
+
+                var leaveData = PreferenceUtils.getObject(HomePreference.LEAVE_HOME, LeaveHomeData::class.java)
+                if (leaveData != null) {
+                    var timeUsed:Int = (System.currentTimeMillis() - leaveData.startTime).toMinus().toInt()
+                    var modeStartTime = leaveData.modeStartTime.toMinus().toInt()
+                    var ionStartTime = leaveData.ionStartTime.toMinus().toInt()
+                    var ionStopTime = leaveData.ionEndTime.toMinus().toInt()
+                    var modeStopTime = leaveData.modeEndTime.toMinus().toInt()
+                    if (timeUsed == modeStartTime) {
+                        var rooms = PreferenceUtils.getObject(HomePreference.ROOMS, Rooms::class.java)?.mRooms
+                        if (rooms != null) {
+                            rooms.forEachIndexed {
+                                i, room ->
+                                TaskUtils.postOnMain(object : Worker() {
+                                    override fun work() {
+                                        Log.d("setmb "+HomeUtil.getChannelFromId(room.id))
+                                        SocketManager.sendString("SETMB" + HomeUtil.getChannelFromId(room.id), null)
+                                    }
+                                }, i * 1000)
+                            }
+                        }
+                    }
+
+                    if (timeUsed == modeStartTime + ionStartTime) {
+                        Log.d("open_2")
+                        SocketManager.sendString("Open_2", null)
+                    }
+                    if (timeUsed == modeStartTime + ionStartTime + ionStopTime) {
+                        Log.d("close2")
+                        SocketManager.sendString("Close2", null)
+                    }
+
+                    if (timeUsed == modeStartTime + ionStartTime + ionStopTime + modeStopTime) {
+                        var rooms = PreferenceUtils.getObject(HomePreference.ROOMS, Rooms::class.java)?.mRooms
+                        if (rooms != null) {
+                            rooms.forEachIndexed {
+                                i, room ->
+                                TaskUtils.postOnMain(object : Worker() {
+                                    override fun work() {
+                                        Log.d("deset "+HomeUtil.getChannelFromId(room.id))
+                                        SocketManager.sendString("DESMB" + HomeUtil.getChannelFromId(room.id), null)
+                                    }
+                                }, i * 1000)
+                            }
+                        }
+                    }
+
+                    if (timeUsed >= modeStartTime + ionStartTime + ionStopTime + modeStopTime) {
+                        PreferenceUtils.setObject(HomePreference.LEAVE_HOME, null)
+                    }
+                }
+                refreshPm25()
             }
+
+            refreshAutoRun()
             TaskUtils.postOnMain(this, 1000 * 20) // 10s
+        }
+    }
+
+    var currentLevel = 0
+    // 自动运行
+    fun refreshAutoRun() {
+        if (PreferenceUtils.getBoolean(HomePreference.AUTO_RUN)) {
+            if (envData != null) {
+                var lastTime = PreferenceUtils.getLong(HomePreference.AUTO_RUN_TIME)
+                if (System.currentTimeMillis() - lastTime > 20 * 1000) { // 20s
+                    PreferenceUtils.setLong(HomePreference.AUTO_RUN_TIME, System.currentTimeMillis())
+                    var setPm = PreferenceUtils.getInt(HomePreference.SET_PM25)
+                    if (envData.pm >= setPm) {
+                        if (currentLevel < 10) {
+                            currentLevel++
+                            setPmLevel(currentLevel)
+                        }
+                    } else {
+                        if (currentLevel > 0) {
+                            currentLevel--
+                            setPmLevel(currentLevel)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun setPmLevel(level : Int) {
+        var rooms = PreferenceUtils.getObject(HomePreference.ROOMS, Rooms::class.java)?.mRooms
+        if (rooms != null) {
+            rooms.forEachIndexed {
+                i, room ->
+                TaskUtils.postOnMain(object : Worker() {
+                    override fun work() {
+                        SocketManager.sendString("SETMB" + HomeUtil.getChannelFromId(room.id) + HomeUtil.getPmSetLevel(level), null)
+                    }
+                }, i * 1000)
+            }
+        }
+    }
+
+    fun refreshPm25() {
+        var pm = PreferenceUtils.getObject(HomePreference.PM25, Pm25::class.java)
+        if (pm == null || (pm.t -  System.currentTimeMillis()) >= 1000 * 60 * 60) { // 1h
+            var req = StringRequest("http://wthrcdn.etouch.cn/WeatherApi?city=%E5%8C%97%E4%BA%AC", object : Net.SuccessListener<String>() {
+                override fun onResponse(response: String?) {
+                    if (response != null) {
+                        var match = "<pm25>(\\d+)</pm25>".toRegex().find(response)
+                        if (match != null && match.groups != null && match.groups.size >= 2) {
+                            var pm25 = match.groups[1].toString()
+                            if (pm25 != null) {
+                                var p = Pm25(pm25, System.currentTimeMillis())
+                                PreferenceUtils.setObject(HomePreference.PM25, p)
+                                pmListener?.onChange(pm25)
+                            }
+                        }
+                    }
+                }
+            }, null)
+            Net.fetchReqQueue().add(req)
         }
     }
 
@@ -175,14 +301,7 @@ object SocketManager {
                 if (HomeUtil.dateFormat.format(current).equals(nextDate)) { // 同一天
                     if (HomeUtil.timeFormat.format(current).equals(v.time)) { // 时间一致
                         var command = if (v.action == 0) "SETMB" else "DESMB"
-                        SocketManager.sendString(command + HomeUtil.getChannelFromId(id), object : BaseTimeSocketListener {
-                            override fun onError(errorCode: Int) {
-                            }
-
-                            override fun onSuccess(data: String?) {
-
-                            }
-                        })
+                        SocketManager.sendString(command + HomeUtil.getChannelFromId(id), null)
                         if (v.repeat == 1) { // 一次
                             removeItem.add(v)
                         }
@@ -241,8 +360,8 @@ object SocketManager {
     }
 
     class EnvData {
-        var tmp = 0;
-        var hdy = 0;
-        var pm = 0;
+        var tmp = 0
+        var hdy = 0
+        var pm = 0
     }
 }

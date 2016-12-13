@@ -19,7 +19,7 @@ import java.util.*
 /**
  * Created by cylee on 16/10/9.
  */
-class SetTimeListActivity : Activity() {
+class SetTimeListActivity : AppBaseActivity() {
     companion object {
         val INPUT_ROOM_ID = "INPUT_ROOM_ID"
         fun createIntent(context : Context, roomId: Int): Intent {

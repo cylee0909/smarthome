@@ -7,4 +7,5 @@
     <color name="ac_medium_btn_normal">#4abdff</color>
     <color name="ac_medium_btn_pressed">#1492dc</color>
     <color name="ac_item_pressed">#c2cacf</color>
+    <drawable name="main_drawable">@color/main_color</drawable>
 </resources>

@@ -1,5 +1,6 @@
 package com.cylee.socket;
 
+import com.babt.smarthome.SocketManager;
 import com.cylee.socket.tcp.IConnectListener;
 
 import java.io.IOException;
@@ -103,7 +104,11 @@ public class UdpSocket {
     }
 
     protected void onReceive(DatagramPacket dp) {
-        mClientAddress = dp.getSocketAddress();
+        try {
+            mClientAddress = dp.getSocketAddress();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         if (mListener != null) {
             mListener.onReceive(this, dp.getData());
         }

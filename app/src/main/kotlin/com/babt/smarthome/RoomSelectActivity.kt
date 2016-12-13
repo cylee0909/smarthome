@@ -18,7 +18,7 @@ import org.jetbrains.anko.onUiThread
 /**
  * Created by cylee on 16/9/22.
  */
-class RoomSelectActivity :BaseActivity() {
+class RoomSelectActivity :AppBaseActivity() {
     companion object {
         var ROOM_MASKS = arrayOf(1 shl 0,
                 1 shl 1,
