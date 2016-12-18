@@ -30,7 +30,7 @@ import kotlin.concurrent.withLock
 object SocketManager {
     var handler: Handler? = null
     var mAddressSocket: TimeCheckSocket? = null
-    var mDataSocket: TimeTcpCheckSocket? = null;
+    var mDataSocket: TimeTcpCheckSocket? = null
     var initCount = 0
     var listener: InitListener? = null
     var initRunnable = InitRunnable()

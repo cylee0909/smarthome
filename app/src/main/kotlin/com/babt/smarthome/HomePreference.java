@@ -14,6 +14,8 @@ public enum HomePreference implements PreferenceUtils.DefaultValueInterface {
     SET_PM25(50),
     AUTO_RUN(false),
     AUTO_RUN_TIME(0L),
+    VERIFIED(false),
+    VERIFY_SUCCESS(false),
     CHANGE_FILTER_TIP_TIME(System.currentTimeMillis()),
     LEAVE_HOME(null);
     HomePreference(Object def) {

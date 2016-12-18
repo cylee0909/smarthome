@@ -11,7 +11,7 @@ open class AppBaseActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         var lastTime = PreferenceUtils.getLong(HomePreference.CHANGE_FILTER_TIP_TIME)
-        if (lastTime - System.currentTimeMillis() > 90 * 24 * 60 * 60 * 1000) { // 90天更换滤芯提醒
+        if (System.currentTimeMillis() - lastTime > 90 * 24 * 60 * 60 * 1000L) { // 90天更换滤芯提醒
             dialogUtil.showDialog(this, "", "确定", object : DialogUtil.ButtonClickListener {
                 override fun OnLeftButtonClick() {
                 }

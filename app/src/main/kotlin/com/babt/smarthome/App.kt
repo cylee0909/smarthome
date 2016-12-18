@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.os.Environment
 import com.cylee.androidlib.base.BaseApplication
+import com.cylee.androidlib.net.Config
 import com.cylee.androidlib.util.Log
 import java.io.*
 import java.text.SimpleDateFormat
@@ -15,6 +16,7 @@ import java.util.*
 class App : BaseApplication() {
     override fun onCreate() {
         super.onCreate()
+        Config.setHost("http://192.168.31.103:8080")
         Log.setLogLevel(if (BuildConfig.DEBUG) Log.OFF else Log.OFF)
         bindSocket()
         redirectLog()

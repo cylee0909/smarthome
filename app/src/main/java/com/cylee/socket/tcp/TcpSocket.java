@@ -90,6 +90,10 @@ public class TcpSocket {
         }
     }
 
+    public boolean isConnected() {
+        return mSocket != null && !mStoped && !mSocket.isClosed();
+    }
+
     protected void onReceive(String dp) {
         if (mListener != null) {
             mListener.onReceive(this, dp);
