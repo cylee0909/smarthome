@@ -19,6 +19,7 @@ public class TimeTcpCheckSocket extends TcpSocket {
     private static final int ERROR_SEND_ERROR = -2;
     private static final int ERROR_TIME_OUT = -3;
     int mTimeOut = DEFAULT_TIMEOUT;
+    private char mEndChar = '^';
 
     public Map<String, PacketBindData> mBindDataMap = Collections.synchronizedMap(new HashMap<String, PacketBindData>());
     private int mId;
@@ -27,6 +28,10 @@ public class TimeTcpCheckSocket extends TcpSocket {
         if (timeOutCheck) {
             new Thread(new TimeOutChecker(), "TimeOutChecker").start();
         }
+    }
+
+    public void setEndChar(char endChar) {
+        mEndChar = endChar;
     }
 
 
@@ -85,7 +90,7 @@ public class TimeTcpCheckSocket extends TcpSocket {
                 result = result.concat("0");
             }
         }
-        return result+"^";
+        return result+mEndChar;
     }
 
     @Override

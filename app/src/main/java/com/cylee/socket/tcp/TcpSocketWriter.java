@@ -21,7 +21,7 @@ public class TcpSocketWriter implements Runnable{
     TcpSocketWriter(TcpSocket socket, LinkedBlockingQueue<String> packets) throws Exception {
         mDatas = packets;
         mBW = new BufferedWriter(
-                new OutputStreamWriter(socket.mSocket.getOutputStream()));
+                new OutputStreamWriter(socket.mSocket.getOutputStream(), "utf-8"));
         mStoped = false;
         mSocket = socket;
     }

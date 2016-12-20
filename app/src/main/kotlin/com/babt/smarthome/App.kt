@@ -20,6 +20,7 @@ class App : BaseApplication() {
         Log.setLogLevel(if (BuildConfig.DEBUG) Log.OFF else Log.OFF)
         bindSocket()
         redirectLog()
+        ConnectSocketManager.initConnect()
     }
 
     fun bindSocket() {
