@@ -48,9 +48,9 @@ public class TcpSocketWriter implements Runnable{
 //                    continue;
 //                }
                 long timeUsed = System.currentTimeMillis() - mLastTime;
-                if (timeUsed < 1000) {
+                if (timeUsed < 100) {
                     try {
-                        Thread.sleep(1000 - timeUsed);
+                        Thread.sleep(100 - timeUsed);
                     } catch (Exception e){
                     }
                 }

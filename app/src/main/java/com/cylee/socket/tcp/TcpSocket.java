@@ -76,7 +76,7 @@ public class TcpSocket {
         return this;
     }
 
-    protected void send(String data) {
+    public void send(String data) {
         mWriteDatas.add(data);
     }
 

@@ -19,6 +19,7 @@ public class TimeTcpCheckSocket extends TcpSocket {
     private static final int ERROR_SEND_ERROR = -2;
     private static final int ERROR_TIME_OUT = -3;
     int mTimeOut = DEFAULT_TIMEOUT;
+    private int mRetryCount = 2;
     private char mEndChar = '^';
 
     public Map<String, PacketBindData> mBindDataMap = Collections.synchronizedMap(new HashMap<String, PacketBindData>());
@@ -34,6 +35,9 @@ public class TimeTcpCheckSocket extends TcpSocket {
         mEndChar = endChar;
     }
 
+    public void setRetryCount(int count) {
+        mRetryCount = count;
+    }
 
     public static TimeTcpCheckSocket client(String address, int port, ITcpConnectListener listener) {
         TimeTcpCheckSocket tcs = new TimeTcpCheckSocket(true);
@@ -95,6 +99,7 @@ public class TimeTcpCheckSocket extends TcpSocket {
 
     @Override
     protected void onReceive(String receiveData) {
+        super.onReceive(receiveData);
         if (receiveData.length() > 2) {
             String id = receiveData.substring(0, 2);
             PacketBindData pb = mBindDataMap.get(id);
@@ -158,7 +163,7 @@ public class TimeTcpCheckSocket extends TcpSocket {
                         String id = iterator.next();
                         PacketBindData pb = mBindDataMap.get(id);
                         if (pb.senTime + mTimeOut <= System.currentTimeMillis()) { // 超时
-                            if (pb.mRetryCount > 2) {
+                            if (pb.mRetryCount > mRetryCount) {
                                 if (pb.mListener != null) {
                                     pb.mListener.onError(ERROR_TIME_OUT);
                                 }

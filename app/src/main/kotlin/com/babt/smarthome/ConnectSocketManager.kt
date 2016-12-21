@@ -1,7 +1,6 @@
 package com.babt.smarthome
 
 import android.content.pm.PackageManager
-import android.os.Build
 import com.baidu.android.common.util.DeviceId
 import com.cylee.androidlib.GsonBuilderFactory
 import com.cylee.androidlib.base.BaseApplication
@@ -31,6 +30,8 @@ object ConnectSocketManager {
             if (mSocket == null) {
                 mSocket = TimeTcpCheckSocket(true)
             }
+            mSocket?.setSoTimeout(3000) // 3s
+            mSocket?.setRetryCount(0) // no retry
             mSocket?.setEndChar('\n');
             mSocket?.connect(HOST, PORT, object : ITcpConnectListener {
                 override fun onConnect(socket: TcpSocket?) {
@@ -54,6 +55,30 @@ object ConnectSocketManager {
                 }
 
                 override fun onReceive(socket: TcpSocket?, data: String?) {
+                    if (data?.startsWith("EXEC_", false) ?: false) {
+                        if (data!!.length > 7) {
+                            var id = data!!.substring(5,7)
+                            var endIndex = data!!.lastIndexOf('^')
+                            if (endIndex >= 7) {
+                                var command = data!!.substring(7, endIndex)
+                                when (command) {
+                                    "" -> {}
+                                    else -> {
+                                        if (SocketManager.isInitSuccess()) {
+                                            SocketManager.sendString(command, object : AbsBaseTimeSocketListener() {
+                                                override fun onSuccess(data: String?) {
+                                                    super.onSuccess(data)
+                                                    socket?.send("#"+id+data+"^\n")
+                                                }
+                                            })
+                                        } else {
+                                            socket?.send("#"+id+"noinit^\n")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             })
         }
