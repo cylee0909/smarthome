@@ -271,13 +271,13 @@ object SocketManager {
 
     fun refreshPm25() {
         var pm = PreferenceUtils.getObject(HomePreference.PM25, Pm25::class.java)
-        if (pm == null || (pm.t -  System.currentTimeMillis()) >= 1000 * 60 * 60) { // 1h
+        if (true || pm == null || (pm.t -  System.currentTimeMillis()) >= 1000 * 60 * 60) { // 1h
             var req = StringRequest("http://wthrcdn.etouch.cn/WeatherApi?city=%E5%8C%97%E4%BA%AC", object : Net.SuccessListener<String>() {
                 override fun onResponse(response: String?) {
                     if (response != null) {
                         var match = "<pm25>(\\d+)</pm25>".toRegex().find(response)
-                        if (match != null && match.groups != null && match.groups.size >= 2) {
-                            var pm25 = match.groups[1].toString()
+                        if (match != null && match.groupValues != null && match.groupValues.size >= 2) {
+                            var pm25 = match.groupValues[1]
                             if (pm25 != null) {
                                 var p = Pm25(pm25, System.currentTimeMillis())
                                 PreferenceUtils.setObject(HomePreference.PM25, p)

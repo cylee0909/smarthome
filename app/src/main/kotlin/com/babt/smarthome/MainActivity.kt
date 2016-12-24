@@ -76,6 +76,7 @@ class MainActivity : AppBaseActivity() {
                                 PreferenceUtils.setBoolean(HomePreference.VERIFIED, true)
                                 if (response?.result?.equals(EncryptUtil.getVerify(id)) ?: false) {
                                     PreferenceUtils.setBoolean(HomePreference.VERIFY_SUCCESS, true)
+                                    DialogUtil.showToast(this@MainActivity, "授权成功", true)
                                 } else {
                                     dialogUtil.showDialog(this@MainActivity, "", "", "确定",object : DialogUtil.ButtonClickListener {
                                         override fun OnLeftButtonClick() {
