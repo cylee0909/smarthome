@@ -33,7 +33,12 @@ public class TcpSocket {
         mStoped = false;
         mListener = listener;
         if (mSocket != null && !mSocket.isClosed()) {
-            throw new IllegalAccessError("Had a alive Binded");
+            try {
+                stop();
+                mSocket.close();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
         }
         try {
             mSocket = new Socket(address, port);

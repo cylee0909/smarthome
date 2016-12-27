@@ -22,7 +22,7 @@ public class TimeTcpCheckSocket extends TcpSocket {
     private int mRetryCount = 2;
     private char mEndChar = '^';
 
-    public Map<String, PacketBindData> mBindDataMap = Collections.synchronizedMap(new HashMap<String, PacketBindData>());
+    public Map<String, PacketBindData> mBindDataMap = new HashMap<String, PacketBindData>();
     private int mId;
 
     public TimeTcpCheckSocket(boolean timeOutCheck) {
@@ -39,6 +39,10 @@ public class TimeTcpCheckSocket extends TcpSocket {
         mRetryCount = count;
     }
 
+    public void setDefaultTimeout(int timeout) {
+        mTimeOut = timeout;
+    }
+
     public static TimeTcpCheckSocket client(String address, int port, ITcpConnectListener listener) {
         TimeTcpCheckSocket tcs = new TimeTcpCheckSocket(true);
         return (TimeTcpCheckSocket)tcs.connect(address, port, listener);
@@ -51,26 +55,31 @@ public class TimeTcpCheckSocket extends TcpSocket {
             }
             return;
         }
-        PacketBindData oldData = mBindDataMap.get(data);
-        if (oldData == null) {
-            String id = createRequestId();
-            oldData = new PacketBindData();
-            oldData.senTime = System.currentTimeMillis();
-            oldData.mSendId = id;
-            oldData.mListener = listener;
-            mBindDataMap.put(id, oldData);
-            data = correctLength(data, id);
-            oldData.mSendData = data;
-        } else {
-            oldData.senTime = System.currentTimeMillis();
-            data = oldData.mSendData;
+
+        String id = createRequestId();
+        synchronized (mBindDataMap) {
+            PacketBindData oldData = mBindDataMap.get(data);
+            if (oldData == null) {
+                oldData = new PacketBindData();
+                oldData.senTime = System.currentTimeMillis();
+                oldData.mSendId = id;
+                oldData.mListener = listener;
+                mBindDataMap.put(id, oldData);
+                data = correctLength(data, id);
+                oldData.mSendData = data;
+            } else {
+                oldData.senTime = System.currentTimeMillis();
+                data = oldData.mSendData;
+            }
         }
 
         try {
             Log.d("send data = "+data);
             super.send(data);
         } catch (Exception e) {
-            mBindDataMap.remove(oldData.mSendId);
+            synchronized (mBindDataMap) {
+                mBindDataMap.remove(id);
+            }
             if (listener != null) {
                 listener.onError(ERROR_SEND_ERROR);
             }
@@ -100,7 +109,7 @@ public class TimeTcpCheckSocket extends TcpSocket {
     @Override
     protected void onReceive(String receiveData) {
         super.onReceive(receiveData);
-        if (receiveData.length() > 2) {
+        if (receiveData != null && receiveData.length() > 2) {
             String id = receiveData.substring(0, 2);
             PacketBindData pb = mBindDataMap.get(id);
             if (pb != null) {
@@ -112,7 +121,9 @@ public class TimeTcpCheckSocket extends TcpSocket {
                         pb.mListener.onSuccess(result);
                     }
                 }
-                mBindDataMap.remove(id);
+                synchronized (mBindDataMap) {
+                    mBindDataMap.remove(id);
+                }
             }
         }
     }
@@ -152,33 +163,33 @@ public class TimeTcpCheckSocket extends TcpSocket {
         public void run() {
             while (!mStoped) {
                 try {
-                    Thread.sleep(mTimeOut / 3);
+                    Thread.sleep(mTimeOut / 2);
                 } catch (InterruptedException e){
                     e.printStackTrace();
                 }
                 removeIds.clear();
-                if (!mBindDataMap.isEmpty()) {
-                    Iterator<String> iterator = mBindDataMap.keySet().iterator();
-                    while (iterator.hasNext()) {
-                        String id = iterator.next();
-                        PacketBindData pb = mBindDataMap.get(id);
-                        if (pb.senTime + mTimeOut <= System.currentTimeMillis()) { // 超时
-                            if (pb.mRetryCount > mRetryCount) {
-                                if (pb.mListener != null) {
-                                    pb.mListener.onError(ERROR_TIME_OUT);
+                synchronized (mBindDataMap) {
+                    if (!mBindDataMap.isEmpty()) {
+                        for (String id : mBindDataMap.keySet()) {
+                            PacketBindData pb = mBindDataMap.get(id);
+                            if (pb.senTime + mTimeOut <= System.currentTimeMillis()) { // 超时
+                                if (pb.mRetryCount >= mRetryCount) {
+                                    if (pb.mListener != null) {
+                                        pb.mListener.onError(ERROR_TIME_OUT);
+                                    }
+                                    removeIds.add(id);
+                                } else {
+                                    pb.mRetryCount++;
+                                    Log.d("retry send id = "+pb.mSendId+" "+pb.mSendData);
+                                    sendString(pb.mSendId, pb.mListener);
                                 }
-                                removeIds.add(id);
-                            } else {
-                                pb.mRetryCount++;
-                                Log.d("retry send id = "+pb.mSendId+" "+pb.mSendData);
-                                sendString(pb.mSendId, pb.mListener);
                             }
                         }
+                        for (String id : removeIds) {
+                            mBindDataMap.remove(id);
+                        }
+                        removeIds.clear();
                     }
-                    for (String id : removeIds) {
-                        mBindDataMap.remove(id);
-                    }
-                    removeIds.clear();
                 }
             }
         }

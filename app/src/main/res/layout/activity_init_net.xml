@@ -72,6 +72,36 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword"/>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/item_margin">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="登陆手机号"
+            android:textColor="@color/material_blue_grey_800"/>
+        <EditText
+            android:id="@+id/ain_login_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/item_margin">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="登陆密码"
+            android:textColor="@color/material_blue_grey_800"/>
+        <EditText
+            android:id="@+id/ain_login_passwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"/>
+    </LinearLayout>
 
     <com.babt.smarthome.widget.StateTextView
         android:id="@+id/ain_confirm_text"

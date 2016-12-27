@@ -40,6 +40,9 @@ object SocketManager {
     var lock = ReentrantLock()
     var lastTimeCheck = ""
     var pantErrorCount = 0
+    var mMaxNullCheck = 10
+    var nullCheckCount = 0
+    var pm25 = 0
 
     var envData = EnvData()
         get() {
@@ -129,7 +132,14 @@ object SocketManager {
                                 }
 
                                 override fun onReceive(socket: TcpSocket?, data: String?) {
-
+                                    if (data == null) {
+                                        nullCheckCount ++
+                                        if (nullCheckCount < mMaxNullCheck) {
+                                            reconnect()
+                                        }
+                                    } else{
+                                        nullCheckCount = 0
+                                    }
                                 }
                             })
                         }
@@ -280,6 +290,10 @@ object SocketManager {
                             var pm25 = match.groupValues[1]
                             if (pm25 != null) {
                                 var p = Pm25(pm25, System.currentTimeMillis())
+                                try {
+                                 this@SocketManager.pm25 = p.p?.toInt() ?: 0
+                                } catch (e : Exception){
+                                }
                                 PreferenceUtils.setObject(HomePreference.PM25, p)
                                 pmListener?.onChange(pm25)
                             }

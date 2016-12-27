@@ -133,6 +133,7 @@ class AirCleanActivity :BaseActivity() , View.OnClickListener {
                             DialogUtil.showToast(this@AirCleanActivity,
                                     "加热模式已"+(if (mHeatContainer?.isSelected ?: false) "打开" else "关闭")
                                     , false)
+                            PreferenceUtils.setBoolean(HomePreference.HEAT, mHeatContainer!!.isSelected)
                         }
                     }
                     override fun onRawData(rawData: DatagramPacket?) {
@@ -166,6 +167,7 @@ class AirCleanActivity :BaseActivity() , View.OnClickListener {
                         } else if (state == 1) {
                             mHeatContainer?.isSelected = true
                         }
+                        PreferenceUtils.setBoolean(HomePreference.HEAT, mHeatContainer!!.isSelected)
                     }
                 }
             }

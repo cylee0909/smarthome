@@ -7,7 +7,7 @@ import android.text.TextUtils
 import android.widget.EditText
 import android.widget.TextView
 import cn.csnbgsh.herbarium.bind
-import com.cylee.androidlib.base.BaseActivity
+import com.babt.smarthome.util.EncryptUtil
 import com.cylee.androidlib.util.PreferenceUtils
 import com.cylee.lib.widget.dialog.DialogUtil
 import com.cylee.socket.TimeCheckSocket
@@ -18,6 +18,8 @@ import com.cylee.socket.TimeCheckSocket
 class NetSetActivity : AppBaseActivity() {
     var wifiName: EditText? = null
     var wifiPasswd: EditText? = null
+    var loginName : EditText? = null
+    var loginPassd : EditText? = null
     var confirm: TextView? = null
 
     companion object {
@@ -32,7 +34,19 @@ class NetSetActivity : AppBaseActivity() {
         wifiName = bind(R.id.ain_wifi_name)
         wifiPasswd = bind(R.id.ain_wifi_passwd)
         confirm = bind(R.id.ain_confirm_text)
+        loginName = bind(R.id.ain_login_name)
+        loginPassd = bind(R.id.ain_login_passwd)
         confirm?.setOnClickListener {
+            if (TextUtils.isEmpty(loginName?.text.toString())) {
+                DialogUtil.showToast(this, "登陆用户名未填写", false)
+                return@setOnClickListener
+            }
+
+            if (loginName?.length() ?: 0 != 11) {
+                DialogUtil.showToast(this, "不是手机号", false)
+                return@setOnClickListener
+            }
+
             if (!TextUtils.isEmpty(wifiName?.text.toString())) {
                 dialogUtil.showWaitingDialog(this, "正在连接...")
                 connect()
@@ -59,6 +73,8 @@ class NetSetActivity : AppBaseActivity() {
                                     }
 
                                     override fun OnRightButtonClick() {
+                                        PreferenceUtils.setString(HomePreference.NET_LOGIN_NAME, loginName?.text.toString())
+                                        PreferenceUtils.setString(HomePreference.NET_LOGIN_PASSWD, EncryptUtil.getVerify(loginPassd?.text.toString()))
                                         System.exit(0)
                                     }
                                 }, "设备网络设置成功,将此设备的网络切换至" + wifiName?.text.toString() + "后重新打开app")
