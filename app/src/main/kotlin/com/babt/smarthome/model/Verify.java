@@ -18,7 +18,7 @@ public class Verify {
         private Input(String id, String verifyId){
             this.id = id;
             this.verifyId = verifyId;
-            this.url = "/verify";
+            this.url = "/smarthome/verify";
             this.method = Request.Method.POST;
             this.aClass = Verify.class;
         }

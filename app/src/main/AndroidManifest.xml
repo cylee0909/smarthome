@@ -12,20 +12,20 @@
         android:supportsRtl="true"
         android:name=".App"
         android:theme="@style/AppTheme" >
-        <activity android:name=".SplashActivity" android:theme="@style/splash_theme">
+        <activity android:name=".SplashActivity" android:theme="@style/splash_theme" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"/>
-        <activity android:name=".AirCleanActivity"/>
-        <activity android:name=".RoomSelectActivity"/>
-        <activity android:name=".RoomDetailActivity"/>
-        <activity android:name=".SetTimeListActivity"/>
-        <activity android:name=".LeaveHomeActivity"/>
-        <activity android:name=".NetSetActivity"/>
-        <activity android:name=".AddTimeActivity" android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
+        <activity android:name=".MainActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".AirCleanActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".RoomSelectActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".RoomDetailActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".SetTimeListActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".LeaveHomeActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".NetSetActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".AddTimeActivity" android:theme="@android:style/Theme.Holo.Light.NoActionBar" android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

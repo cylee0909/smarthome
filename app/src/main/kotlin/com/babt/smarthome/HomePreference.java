@@ -18,6 +18,8 @@ public enum HomePreference implements PreferenceUtils.DefaultValueInterface {
     AUTO_RUN_TIME(0L),
     VERIFIED(false),
     VERIFY_SUCCESS(false),
+    VERIFY_TIME(0L),
+    VERIFY_KEY(""),
     HEAT(false),
     CHANGE_FILTER_TIP_TIME(System.currentTimeMillis()),
     LEAVE_HOME(null);

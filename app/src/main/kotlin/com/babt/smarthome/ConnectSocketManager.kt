@@ -10,20 +10,19 @@ import com.cylee.androidlib.base.BaseApplication
 import com.cylee.androidlib.thread.Worker
 import com.cylee.androidlib.util.PreferenceUtils
 import com.cylee.androidlib.util.TaskUtils
-import com.cylee.lib.widget.dialog.DialogUtil
 import com.cylee.socket.AbsBaseTimeSocketListener
 import com.cylee.socket.TimeCheckSocket
 import com.cylee.socket.tcp.ITcpConnectListener
 import com.cylee.socket.tcp.TcpSocket
 import com.cylee.socket.tcp.TimeTcpCheckSocket
-import org.jetbrains.anko.onUiThread
 
 /**
  * Created by cylee on 16/12/15.
  * 连接远程服务器的管理类
  */
 object ConnectSocketManager {
-    const val HOST = "192.168.31.103"
+//    const val HOST = "192.168.31.103"
+    const val HOST = "115.47.58.102"
     const val PORT = 8989
     const val MAX_RETRY_COUNT = 100
     const val HEART_INTERNAL = 40 * 1000 //40s

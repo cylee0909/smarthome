@@ -2,16 +2,22 @@ package com.babt.smarthome
 
 import android.os.Handler
 import android.os.Looper
+import android.text.TextUtils
 import com.android.volley.toolbox.StringRequest
 import com.babt.smarthome.entity.LeaveHomeData
 import com.babt.smarthome.entity.Pm25
 import com.babt.smarthome.entity.Rooms
 import com.babt.smarthome.entity.TimeSet
+import com.babt.smarthome.model.Verify
+import com.babt.smarthome.util.EncryptUtil
+import com.baidu.android.common.util.DeviceId
+import com.cylee.androidlib.base.BaseApplication
 import com.cylee.androidlib.net.Net
 import com.cylee.androidlib.thread.Worker
 import com.cylee.androidlib.util.Log
 import com.cylee.androidlib.util.PreferenceUtils
 import com.cylee.androidlib.util.TaskUtils
+import com.cylee.lib.widget.dialog.DialogUtil
 import com.cylee.socket.TimeCheckSocket
 import com.cylee.socket.tcp.BaseTimeSocketListener
 import com.cylee.socket.tcp.ITcpConnectListener
@@ -233,6 +239,7 @@ object SocketManager {
                     }
                 }
                 refreshPm25()
+                checkVerify()
             }
 
             refreshAutoRun()
@@ -328,6 +335,27 @@ object SocketManager {
             }
         }
         return false
+    }
+
+    fun checkVerify() {
+        if (System.currentTimeMillis() - PreferenceUtils.getLong(HomePreference.VERIFY_TIME) > 24 * 60 * 60 * 1000) {
+            var s = PreferenceUtils.getString(HomePreference.VERIFY_KEY)
+            if (!TextUtils.isEmpty(s)) {
+                var id = DeviceId.getDeviceID(BaseApplication.getApplication())
+                var input = Verify.buidInput(id, s)
+                PreferenceUtils.setLong(HomePreference.VERIFY_TIME, System.currentTimeMillis())
+                Net.post(BaseApplication.getApplication(), input, object : Net.SuccessListener<Verify>() {
+                    override fun onResponse(response: Verify?) {
+                        if (response != null) {
+                            PreferenceUtils.setBoolean(HomePreference.VERIFIED, true)
+                            if (!(response?.result?.equals(EncryptUtil.getVerify(id)) ?: false)) {
+                                PreferenceUtils.setBoolean(HomePreference.VERIFY_SUCCESS, false)
+                            }
+                        }
+                    }
+                }, null)
+            }
+        }
     }
 
     class AskEnvRunnable : Worker() {

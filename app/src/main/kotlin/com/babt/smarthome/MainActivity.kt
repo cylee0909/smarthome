@@ -72,10 +72,12 @@ class MainActivity : AppBaseActivity() {
                     var input = Verify.buidInput(id, s)
                     Net.post(this@MainActivity, input, object : Net.SuccessListener<Verify>() {
                         override fun onResponse(response: Verify?) {
+                            PreferenceUtils.setLong(HomePreference.VERIFY_TIME, System.currentTimeMillis())
                             if (response != null) {
                                 PreferenceUtils.setBoolean(HomePreference.VERIFIED, true)
                                 if (response?.result?.equals(EncryptUtil.getVerify(id)) ?: false) {
                                     PreferenceUtils.setBoolean(HomePreference.VERIFY_SUCCESS, true)
+                                    PreferenceUtils.setString(HomePreference.VERIFY_KEY, s)
                                     DialogUtil.showToast(this@MainActivity, "授权成功", true)
                                 } else {
                                     dialogUtil.showDialog(this@MainActivity, "", "", "确定",object : DialogUtil.ButtonClickListener {
