@@ -57,55 +57,57 @@ class MainActivity : AppBaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (!SocketManager.isInitSuccess()) {
+        if (!SocketManager.isInitSuccess() && SocketManager.initCount >= 20) {
             retrySocket()
         }
 
-        if (!PreferenceUtils.getBoolean(HomePreference.VERIFIED)) {
-            dialogUtil.dismissDialog()
-            val v = View.inflate(this, R.layout.input_verify, null)
-            val numEdit = v.bind<EditText>(R.id.edit)
-            dialogUtil.showViewDialog(this, "授权验证", "", "确认",object : DialogUtil.ButtonClickListener {
-                override fun OnRightButtonClick() {
-                    var s = numEdit.text.toString()
-                    var id = DeviceId.getDeviceID(this@MainActivity)
-                    var input = Verify.buidInput(id, s)
-                    Net.post(this@MainActivity, input, object : Net.SuccessListener<Verify>() {
-                        override fun onResponse(response: Verify?) {
-                            PreferenceUtils.setLong(HomePreference.VERIFY_TIME, System.currentTimeMillis())
-                            if (response != null) {
-                                PreferenceUtils.setBoolean(HomePreference.VERIFIED, true)
-                                if (response?.result?.equals(EncryptUtil.getVerify(id)) ?: false) {
-                                    PreferenceUtils.setBoolean(HomePreference.VERIFY_SUCCESS, true)
-                                    PreferenceUtils.setString(HomePreference.VERIFY_KEY, s)
-                                    DialogUtil.showToast(this@MainActivity, "授权成功", true)
-                                } else {
-                                    dialogUtil.showDialog(this@MainActivity, "", "", "确定",object : DialogUtil.ButtonClickListener {
-                                        override fun OnLeftButtonClick() {
-                                        }
+        if (PreferenceUtils.getBoolean(HomePreference.NEED_VERIFY)) {
+            if (!PreferenceUtils.getBoolean(HomePreference.VERIFIED)) {
+                dialogUtil.dismissDialog()
+                val v = View.inflate(this, R.layout.input_verify, null)
+                val numEdit = v.bind<EditText>(R.id.edit)
+                dialogUtil.showViewDialog(this, "授权验证", "", "确认",object : DialogUtil.ButtonClickListener {
+                    override fun OnRightButtonClick() {
+                        var s = numEdit.text.toString()
+                        var id = DeviceId.getDeviceID(this@MainActivity)
+                        var input = Verify.buidInput(id, s)
+                        Net.post(this@MainActivity, input, object : Net.SuccessListener<Verify>() {
+                            override fun onResponse(response: Verify?) {
+                                PreferenceUtils.setLong(HomePreference.VERIFY_TIME, System.currentTimeMillis())
+                                if (response != null) {
+                                    PreferenceUtils.setBoolean(HomePreference.VERIFIED, true)
+                                    if (response?.result?.equals(EncryptUtil.getVerify(id)) ?: false) {
+                                        PreferenceUtils.setBoolean(HomePreference.VERIFY_SUCCESS, true)
+                                        PreferenceUtils.setString(HomePreference.VERIFY_KEY, s)
+                                        DialogUtil.showToast(this@MainActivity, "授权成功", true)
+                                    } else {
+                                        dialogUtil.showDialog(this@MainActivity, "", "", "确定",object : DialogUtil.ButtonClickListener {
+                                            override fun OnLeftButtonClick() {
+                                            }
 
-                                        override fun OnRightButtonClick() {
-                                            System.exit(0)
-                                        }
-                                    }, "授权验证失败,请联系厂家获取软件授权", false, false, null)
+                                            override fun OnRightButtonClick() {
+                                                System.exit(0)
+                                            }
+                                        }, "授权验证失败,请联系厂家获取软件授权", false, false, null)
+                                    }
                                 }
                             }
-                        }
-                    }, null)
-                }
-                override fun OnLeftButtonClick() {
-                }
-            }, v, false, false, null)
-        } else {
-            if (!PreferenceUtils.getBoolean(HomePreference.VERIFY_SUCCESS)) {
-                dialogUtil.showDialog(this, "授权验证", "", "确认", object : DialogUtil.ButtonClickListener {
+                        }, null)
+                    }
                     override fun OnLeftButtonClick() {
                     }
+                }, v, false, false, null)
+            } else {
+                if (!PreferenceUtils.getBoolean(HomePreference.VERIFY_SUCCESS)) {
+                    dialogUtil.showDialog(this, "授权验证", "", "确认", object : DialogUtil.ButtonClickListener {
+                        override fun OnLeftButtonClick() {
+                        }
 
-                    override fun OnRightButtonClick() {
-                        System.exit(0)
-                    }
-                }, "没有授权,请联系厂家获取软件授权", false, false, null)
+                        override fun OnRightButtonClick() {
+                            System.exit(0)
+                        }
+                    }, "没有授权,请联系厂家获取软件授权", false, false, null)
+                }
             }
         }
     }

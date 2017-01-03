@@ -20,6 +20,7 @@ class NetSetActivity : AppBaseActivity() {
     var wifiPasswd: EditText? = null
     var loginName : EditText? = null
     var loginPassd : EditText? = null
+    var address : EditText? = null
     var confirm: TextView? = null
 
     companion object {
@@ -36,6 +37,7 @@ class NetSetActivity : AppBaseActivity() {
         confirm = bind(R.id.ain_confirm_text)
         loginName = bind(R.id.ain_login_name)
         loginPassd = bind(R.id.ain_login_passwd)
+        address = bind(R.id.ain_address)
         confirm?.setOnClickListener {
             if (TextUtils.isEmpty(loginName?.text.toString())) {
                 DialogUtil.showToast(this, "登陆用户名未填写", false)
@@ -57,6 +59,15 @@ class NetSetActivity : AppBaseActivity() {
     }
 
     fun connect() {
+//        if (BuildConfig.DEBUG) {
+//            PreferenceUtils.setBoolean(HomePreference.NET_INITED, true)
+//            PreferenceUtils.commitString(HomePreference.NET_LOGIN_NAME, loginName?.text.toString())
+//            PreferenceUtils.commitString(HomePreference.NET_LOGIN_PASSWD, EncryptUtil.getVerify(loginPassd?.text.toString()))
+//            PreferenceUtils.commitString(HomePreference.NET_LOGIN_ADDRESS, address?.text.toString())
+//            System.exit(0)
+//            return
+//        }
+
         SocketManager.mAddressSocket?.sendString("WIFN_" + wifiName?.text.toString(), object : TimeCheckSocket.AbsTimeSocketListener() {
             override fun onSuccess(data: String?) {
                 super.onSuccess(data)
@@ -73,8 +84,9 @@ class NetSetActivity : AppBaseActivity() {
                                     }
 
                                     override fun OnRightButtonClick() {
-                                        PreferenceUtils.setString(HomePreference.NET_LOGIN_NAME, loginName?.text.toString())
-                                        PreferenceUtils.setString(HomePreference.NET_LOGIN_PASSWD, EncryptUtil.getVerify(loginPassd?.text.toString()))
+                                        PreferenceUtils.commitString(HomePreference.NET_LOGIN_ADDRESS, address?.text.toString())
+                                        PreferenceUtils.commitString(HomePreference.NET_LOGIN_NAME, loginName?.text.toString())
+                                        PreferenceUtils.commitString(HomePreference.NET_LOGIN_PASSWD, EncryptUtil.getVerify(loginPassd?.text.toString()))
                                         System.exit(0)
                                     }
                                 }, "设备网络设置成功,将此设备的网络切换至" + wifiName?.text.toString() + "后重新打开app")

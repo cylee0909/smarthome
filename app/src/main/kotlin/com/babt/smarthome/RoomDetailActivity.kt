@@ -28,7 +28,7 @@ class RoomDetailActivity : AppBaseActivity() , View.OnClickListener{
             return intent
         }
     }
-    var mPaused = true
+    var mStoped = true
     var mTimeSetText : TextView? = null
     var mPmTipText : TextView? = null
     var mTimeTip : TextView? = null
@@ -193,25 +193,17 @@ class RoomDetailActivity : AppBaseActivity() , View.OnClickListener{
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        mPaused = true
-        TaskUtils.removePostedWork(askEnvWork)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mPaused = false
-        TaskUtils.postOnMain(askEnvWork)
-    }
-
     override fun onStart() {
         super.onStart()
+        mStoped = false
         TaskUtils.postOnMain(checkLevelWork)
+        TaskUtils.postOnMain(askEnvWork)
     }
 
     override fun onStop() {
         super.onStop()
+        mStoped = true
+        TaskUtils.removePostedWork(askEnvWork)
         TaskUtils.removePostedWork(checkLevelWork)
     }
 
@@ -251,7 +243,8 @@ class RoomDetailActivity : AppBaseActivity() , View.OnClickListener{
 
     inner class AskEnvRunnable : Worker() {
         override fun work() {
-            if (mPaused) return
+            if (mStoped) return
+            TaskUtils.removePostedWork(this)
             var envData = SocketManager.envData
             mTmpText?.setText(envData.tmp.toString()+"°C")
             mHdyText?.setText(envData.hdy.toString()+"%")
@@ -262,6 +255,7 @@ class RoomDetailActivity : AppBaseActivity() , View.OnClickListener{
 
     inner class CheckLevelRunnable : Worker() {
         override fun work() {
+            if (mStoped) return
             TaskUtils.removePostedWork(this)
             SocketManager.sendString("ASKMB"+getChannelFromPosition(mCurrentId), object : TimeCheckSocket.AbsTimeSocketListener() {
                 override fun onSuccess(data: String?) {

@@ -50,8 +50,6 @@ public class UdpSocket {
 
         checkSocket();
 
-        onConnect();
-
         if (mReader == null) {
             mReader = new SocketReader(this);
             new Thread(mReader, "Socket-Reader").start();
@@ -64,6 +62,8 @@ public class UdpSocket {
                 new Thread(mWriters[i], "Socket-Writer"+i).start();
             }
         }
+
+        onConnect();
         return this;
     }
 

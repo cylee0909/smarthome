@@ -8,6 +8,7 @@ import com.babt.smarthome.entity.LeaveHomeData
 import com.babt.smarthome.entity.Pm25
 import com.babt.smarthome.entity.Rooms
 import com.babt.smarthome.entity.TimeSet
+import com.babt.smarthome.model.Config
 import com.babt.smarthome.model.Verify
 import com.babt.smarthome.util.EncryptUtil
 import com.baidu.android.common.util.DeviceId
@@ -17,7 +18,6 @@ import com.cylee.androidlib.thread.Worker
 import com.cylee.androidlib.util.Log
 import com.cylee.androidlib.util.PreferenceUtils
 import com.cylee.androidlib.util.TaskUtils
-import com.cylee.lib.widget.dialog.DialogUtil
 import com.cylee.socket.TimeCheckSocket
 import com.cylee.socket.tcp.BaseTimeSocketListener
 import com.cylee.socket.tcp.ITcpConnectListener
@@ -69,7 +69,9 @@ object SocketManager {
             }
         }, object : Worker() {
             override fun work() {
-                handler?.post(initRunnable)
+                if(PreferenceUtils.getBoolean(HomePreference.NET_INITED)) {
+                    handler?.post(initRunnable)
+                }
             }
         })
     }
@@ -105,6 +107,7 @@ object SocketManager {
             handler?.removeCallbacks(this)
             Log.d("init runnable run , initCount = " + initCount)
             if (retry || (!isInitSuccess() && initCount < 20)) {
+                retry = false
 //                DialogUtil.showToast(BaseApplication.getApplication(), "发ASKIP请求", false)
                 mAddressSocket?.sendString("ASKIP0", object : TimeCheckSocket.AbsTimeSocketListener() {
                     override fun onError(errorCode: Int) {
@@ -120,34 +123,40 @@ object SocketManager {
                     override fun onRawData(rawData: DatagramPacket?) {
                         if (rawData != null) {
 //                            DialogUtil.showToast(BaseApplication.getApplication(), "ip连接: "+rawData.address.hostAddress, false)
-                            mDataSocket = TimeTcpCheckSocket(true);
-                            mDataSocket?.connect(rawData.address.hostAddress, 8000, object : ITcpConnectListener {
-                                override fun onConnect(socket: TcpSocket?) {
-                                    TaskUtils.removePostedWork(envWork)
-                                    TaskUtils.removePostedWork(timeWord)
-                                    Log.d("socket init success!")
-                                    listener?.onInitSuccess()
-                                    TaskUtils.postOnMain(envWork)
-                                    TaskUtils.postOnMain(timeWord)
-                                }
-
-                                override fun onConnectFail(errCode: Int) {
-//                                    DialogUtil.showToast(BaseApplication.getApplication(), "TCP连接失败 : "+errCode, false)
-                                    initCount++
-                                    handler?.postDelayed(this@InitRunnable, 500)
-                                }
-
-                                override fun onReceive(socket: TcpSocket?, data: String?) {
-                                    if (data == null) {
-                                        nullCheckCount ++
-                                        if (nullCheckCount < mMaxNullCheck) {
-                                            reconnect()
-                                        }
-                                    } else{
-                                        nullCheckCount = 0
+                            mDataSocket = TimeTcpCheckSocket(true)
+                            try {
+                                mDataSocket?.connect(rawData.address.hostAddress, 8000, object : ITcpConnectListener {
+                                    override fun onConnect(socket: TcpSocket?) {
+                                        TaskUtils.removePostedWork(envWork)
+                                        TaskUtils.removePostedWork(timeWord)
+                                        Log.d("socket init success!")
+                                        listener?.onInitSuccess()
+                                        TaskUtils.postOnMain(envWork)
+                                        TaskUtils.postOnMain(timeWord)
                                     }
-                                }
-                            })
+
+                                    override fun onConnectFail(errCode: Int) {
+//                                    DialogUtil.showToast(BaseApplication.getApplication(), "TCP连接失败 : "+errCode, false)
+                                        initCount++
+                                        handler?.postDelayed(this@InitRunnable, 500)
+                                    }
+
+                                    override fun onReceive(socket: TcpSocket?, data: String?) {
+                                        if (data == null) {
+                                            nullCheckCount ++
+                                            if (nullCheckCount < mMaxNullCheck) {
+                                                reconnect()
+                                            }
+                                        } else{
+                                            nullCheckCount = 0
+                                        }
+                                    }
+                                })
+                            } catch (e : Exception) {
+                                e.printStackTrace()
+                                initCount++
+                                handler?.postDelayed(this@InitRunnable, 500)
+                            }
                         }
                     }
                 })
@@ -339,22 +348,31 @@ object SocketManager {
 
     fun checkVerify() {
         if (System.currentTimeMillis() - PreferenceUtils.getLong(HomePreference.VERIFY_TIME) > 24 * 60 * 60 * 1000) {
-            var s = PreferenceUtils.getString(HomePreference.VERIFY_KEY)
-            if (!TextUtils.isEmpty(s)) {
-                var id = DeviceId.getDeviceID(BaseApplication.getApplication())
-                var input = Verify.buidInput(id, s)
-                PreferenceUtils.setLong(HomePreference.VERIFY_TIME, System.currentTimeMillis())
-                Net.post(BaseApplication.getApplication(), input, object : Net.SuccessListener<Verify>() {
-                    override fun onResponse(response: Verify?) {
-                        if (response != null) {
-                            PreferenceUtils.setBoolean(HomePreference.VERIFIED, true)
-                            if (!(response?.result?.equals(EncryptUtil.getVerify(id)) ?: false)) {
-                                PreferenceUtils.setBoolean(HomePreference.VERIFY_SUCCESS, false)
+            Net.post(BaseApplication.getApplication(), Config.buidInput(DeviceId.getDeviceID(BaseApplication.getApplication())), object : Net.SuccessListener<Config>() {
+                override fun onResponse(response: Config?) {
+                    PreferenceUtils.setLong(HomePreference.VERIFY_TIME, System.currentTimeMillis())
+                    if (response != null) {
+                        PreferenceUtils.setBoolean(HomePreference.NEED_VERIFY, response.verify)
+                        if (response.verify) {
+                            var s = PreferenceUtils.getString(HomePreference.VERIFY_KEY)
+                            if (!TextUtils.isEmpty(s)) {
+                                var id = DeviceId.getDeviceID(BaseApplication.getApplication())
+                                var input = Verify.buidInput(id, s)
+                                Net.post(BaseApplication.getApplication(), input, object : Net.SuccessListener<Verify>() {
+                                    override fun onResponse(response: Verify?) {
+                                        if (response != null) {
+                                            PreferenceUtils.setBoolean(HomePreference.VERIFIED, true)
+                                            if (!(response?.result?.equals(EncryptUtil.getVerify(id)) ?: false)) {
+                                                PreferenceUtils.setBoolean(HomePreference.VERIFY_SUCCESS, false)
+                                            }
+                                        }
+                                    }
+                                }, null)
                             }
                         }
                     }
-                }, null)
-            }
+                }
+            }, null)
         }
     }
 

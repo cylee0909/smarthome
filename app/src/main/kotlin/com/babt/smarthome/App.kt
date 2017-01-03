@@ -6,6 +6,7 @@ import android.os.Environment
 import com.cylee.androidlib.base.BaseApplication
 import com.cylee.androidlib.net.Config
 import com.cylee.androidlib.util.Log
+import com.cylee.androidlib.util.PreferenceUtils
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -16,15 +17,18 @@ import java.util.*
 class App : BaseApplication() {
     override fun onCreate() {
         super.onCreate()
-        Config.setHost("http://115.47.58.102:8990/")
+        Config.setHost(AppConfig.config.serverHttpUrl)
         Log.setLogLevel(if (BuildConfig.DEBUG) Log.OFF else Log.OFF)
         bindSocket()
         redirectLog()
-        ConnectSocketManager.initConnect()
     }
 
     fun bindSocket() {
         SocketManager.reconnect()
+        // 如果已经设置过网络,则尝试初始化连接
+        if (PreferenceUtils.getBoolean(HomePreference.NET_INITED)) {
+            ConnectSocketManager.initConnect()
+        }
     }
 
     //测试包或者非release包将日志输出到文件中，方便查问题

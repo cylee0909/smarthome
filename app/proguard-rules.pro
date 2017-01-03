@@ -15,3 +15,17 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-dontwarn kotlin.**
+-assumenosideeffects class kotlin.jvm.internal.Intrinsics {
+    static void checkParameterIsNotNull(java.lang.Object, java.lang.String);
+}
+
+-keep class com.babt.smarthome.entity.** {
+   *;
+}
+
+-keep class com.babt.smarthome.model.** {
+    *;
+}
+#PreferenceUtils相关类不混淆
+-keep class * implements com.cylee.androidlib.util.PreferenceUtils$DefaultValueInterface { *;}

@@ -12,7 +12,7 @@ import com.cylee.androidlib.util.TaskUtils
 class SplashActivity : BaseActivity() {
     var startWork = object: Worker() {
         override fun work() {
-            if (true || PreferenceUtils.getBoolean(HomePreference.NET_INITED)) {
+            if (PreferenceUtils.getBoolean(HomePreference.NET_INITED)) {
                 startActivity(MainActivity.createIntent(this@SplashActivity))
             } else {
                 startActivity(NetSetActivity.createIntent(this@SplashActivity))
