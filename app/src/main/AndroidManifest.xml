@@ -26,6 +26,7 @@
         <activity android:name=".SetTimeListActivity" android:screenOrientation="portrait"/>
         <activity android:name=".LeaveHomeActivity" android:screenOrientation="portrait"/>
         <activity android:name=".NetSetActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".SensorNetSetActivity" android:screenOrientation="portrait"/>
         <activity android:name=".AddTimeActivity" android:theme="@android:style/Theme.Holo.Light.NoActionBar" android:screenOrientation="portrait"/>
 
         <meta-data

@@ -86,15 +86,15 @@ class AirCleanActivity :BaseActivity() , View.OnClickListener {
         mAutoContainer!!.setOnLongClickListener {
             val v = View.inflate(this, R.layout.input_pm, null);
             val numEdit = v.bind<EditText>(R.id.num_edit)
-            numEdit.setText(PreferenceUtils.getInt(HomePreference.SET_PM25).toString())
+            numEdit.setText(PreferenceUtils.getInt(HomePreference.AUTO_RUN_SET_PM25).toString())
             numEdit.setSelection(numEdit.text.length)
             DialogUtil().showViewDialog(this, "自动运行设置", "", "确认",object : DialogUtil.ButtonClickListener {
                 override fun OnRightButtonClick() {
                     var s = numEdit.text.toString()
                     if (!TextUtils.isEmpty(s)) {
                         var input = s.toInt()
-                        input = Math.min(10, Math.max(input, 100))
-                        PreferenceUtils.setInt(HomePreference.PM25, input)
+                        input = Math.min(100, Math.max(input, 10))
+                        PreferenceUtils.setInt(HomePreference.AUTO_RUN_SET_PM25, input)
                     }
                 }
                 override fun OnLeftButtonClick() {

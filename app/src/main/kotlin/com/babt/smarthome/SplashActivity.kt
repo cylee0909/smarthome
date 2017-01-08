@@ -26,11 +26,13 @@ class SplashActivity : BaseActivity() {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Fabric.with(this, Crashlytics())
-        Fabric.with(this, Answers())
-        Crashlytics.setUserIdentifier(DeviceId.getDeviceID(this))
-        Crashlytics.setUserName(PreferenceUtils.getString(HomePreference.NET_LOGIN_NAME))
-        Crashlytics.setString("address", PreferenceUtils.getString(HomePreference.NET_LOGIN_ADDRESS))
+        if (PreferenceUtils.getBoolean(HomePreference.NET_INITED)) {
+            Fabric.with(this, Crashlytics())
+            Fabric.with(this, Answers())
+            Crashlytics.setUserIdentifier(DeviceId.getDeviceID(this))
+            Crashlytics.setUserName(PreferenceUtils.getString(HomePreference.NET_LOGIN_NAME))
+            Crashlytics.setString("address", PreferenceUtils.getString(HomePreference.NET_LOGIN_ADDRESS))
+        }
         setContentView(R.layout.activity_splash)
         TaskUtils.postOnMain(startWork, 2000)
     }

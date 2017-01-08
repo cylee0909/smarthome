@@ -264,7 +264,7 @@ object SocketManager {
                 var lastTime = PreferenceUtils.getLong(HomePreference.AUTO_RUN_TIME)
                 if (System.currentTimeMillis() - lastTime > 20 * 1000) { // 20s
                     PreferenceUtils.setLong(HomePreference.AUTO_RUN_TIME, System.currentTimeMillis())
-                    var setPm = PreferenceUtils.getInt(HomePreference.SET_PM25)
+                    var setPm = PreferenceUtils.getInt(HomePreference.AUTO_RUN_SET_PM25)
                     if (envData.pm >= setPm) {
                         if (currentLevel < 10) {
                             currentLevel++

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import cn.csnbgsh.herbarium.bind
@@ -55,6 +56,11 @@ class NetSetActivity : AppBaseActivity() {
             } else {
                 DialogUtil.showToast(this, "参数填写错误", false)
             }
+        }
+        bind<View>(R.id.ain_people).setOnLongClickListener {
+            startActivity(SensorNetSetActivity.createIntent(this))
+            finish()
+            return@setOnLongClickListener true
         }
     }
 
