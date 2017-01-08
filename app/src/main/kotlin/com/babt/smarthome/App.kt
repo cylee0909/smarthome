@@ -2,7 +2,9 @@ package com.babt.smarthome
 
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.Context
 import android.os.Environment
+import android.os.PowerManager
 import com.cylee.androidlib.base.BaseApplication
 import com.cylee.androidlib.net.Config
 import com.cylee.androidlib.util.Log
@@ -15,8 +17,14 @@ import java.util.*
  * Created by cylee on 16/9/20.
  */
 class App : BaseApplication() {
+    var lock: PowerManager.WakeLock? = null
+
     override fun onCreate() {
         super.onCreate()
+        val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
+        lock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, packageName)
+        lock?.acquire()
+
         Config.setHost(AppConfig.config.serverHttpUrl)
         Log.setLogLevel(if (BuildConfig.DEBUG) Log.OFF else Log.OFF)
         bindSocket()
@@ -29,6 +37,11 @@ class App : BaseApplication() {
         if (PreferenceUtils.getBoolean(HomePreference.NET_INITED)) {
             ConnectSocketManager.initConnect()
         }
+    }
+
+    override fun onTerminate() {
+        super.onTerminate()
+        lock?.release()
     }
 
     //测试包或者非release包将日志输出到文件中，方便查问题

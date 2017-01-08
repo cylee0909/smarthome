@@ -59,15 +59,6 @@ class NetSetActivity : AppBaseActivity() {
     }
 
     fun connect() {
-//        if (BuildConfig.DEBUG) {
-//            PreferenceUtils.setBoolean(HomePreference.NET_INITED, true)
-//            PreferenceUtils.commitString(HomePreference.NET_LOGIN_NAME, loginName?.text.toString())
-//            PreferenceUtils.commitString(HomePreference.NET_LOGIN_PASSWD, EncryptUtil.getVerify(loginPassd?.text.toString()))
-//            PreferenceUtils.commitString(HomePreference.NET_LOGIN_ADDRESS, address?.text.toString())
-//            System.exit(0)
-//            return
-//        }
-
         SocketManager.mAddressSocket?.sendString("WIFN_" + wifiName?.text.toString(), object : TimeCheckSocket.AbsTimeSocketListener() {
             override fun onSuccess(data: String?) {
                 super.onSuccess(data)

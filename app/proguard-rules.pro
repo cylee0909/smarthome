@@ -29,3 +29,11 @@
 }
 #PreferenceUtils相关类不混淆
 -keep class * implements com.cylee.androidlib.util.PreferenceUtils$DefaultValueInterface { *;}
+
+-keepattributes *Annotation*
+-keepattributes SourceFile,LineNumberTable
+-keep public class * extends java.lang.Exception
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**
+
+
