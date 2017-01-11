@@ -42,70 +42,101 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/ac_top_container_height"
         android:background="@color/main_color"
-        android:gravity="center">
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="@dimen/ac_top_item_height"
-            android:layout_height="@dimen/ac_top_item_height"
-            android:layout_gravity="center"
-            android:background="@drawable/air_clean_bg"
-            android:paddingBottom="@dimen/item_margin_6"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="空气质量"
-                android:textColor="#1562bc"
-                android:textSize="@dimen/text_level_1" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
-                android:layout_marginTop="6dp"
-                android:text="优"
-                android:textColor="#97d71c"
-                android:textSize="@dimen/text_level_1" />
-
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center">
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/ac_top_item_height"
+                android:layout_height="@dimen/ac_top_item_height"
+                android:layout_gravity="center"
+                android:background="@drawable/air_clean_bg"
+                android:paddingBottom="@dimen/item_margin_6"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/aac_pm_tip"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="室内\n-ug/m3"
+                    android:text="空气质量"
                     android:textColor="#1562bc"
-                    android:paddingLeft="@dimen/item_margin_6"
-                    android:textSize="@dimen/text_level_4" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="48dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="2dp"
-                    android:background="#1562bc" />
+                    android:textSize="@dimen/text_level_1" />
 
                 <TextView
-                    android:id="@+id/out_pm_text"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginTop="6dp"
+                    android:text="优"
+                    android:textColor="#97d71c"
+                    android:textSize="@dimen/text_level_1" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="室外\n-ug/m3"
-                    android:textColor="#1562bc"
-                    android:paddingRight="@dimen/item_margin_5"
-                    android:textSize="@dimen/text_level_4" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/aac_pm_tip"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="室内\n-ug/m3"
+                        android:textColor="#1562bc"
+                        android:paddingLeft="@dimen/item_margin_6"
+                        android:textSize="@dimen/text_level_4" />
+
+                    <View
+                        android:layout_width="2dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:background="#1562bc" />
+
+                    <TextView
+                        android:id="@+id/out_pm_text"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="室外\n-ug/m3"
+                        android:textColor="#1562bc"
+                        android:paddingRight="@dimen/item_margin_5"
+                        android:textSize="@dimen/text_level_4" />
+                </LinearLayout>
             </LinearLayout>
+        </FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#33000000"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/aac_mode_start_tip_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_level_5"
+                android:textColor="#fcfcfc"
+                android:padding="3dp"
+                android:text="运行功率"/>
+            <SeekBar
+                android:id="@+id/aac_power_seek"
+                android:layout_width="match_parent"
+                android:max="1024"
+                android:progress="0"
+                android:thumb="@drawable/seek_thumb"
+                android:thumbOffset="@dimen/item_margin_2"
+                android:progressDrawable="@drawable/progress_holo_light"
+                android:layout_height="wrap_content" />
         </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout

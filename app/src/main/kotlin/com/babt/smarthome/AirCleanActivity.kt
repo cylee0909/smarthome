@@ -7,6 +7,7 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.SeekBar
 import android.widget.TextView
 import cn.csnbgsh.herbarium.bind
 import com.babt.smarthome.entity.Pm25
@@ -102,6 +103,35 @@ class AirCleanActivity :BaseActivity() , View.OnClickListener {
             }, v)
             return@setOnLongClickListener true
         }
+
+        var powerSeek = bind<SeekBar>(R.id.aac_power_seek);
+        powerSeek.progress = PreferenceUtils.getInt(HomePreference.POWER_SEEK)
+        powerSeek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                var current = seekBar?.progress ?: 0;
+                var currentStr = String.format("%04d", current)
+                SocketManager.sendString("SETPID"+currentStr, object : TimeCheckSocket.AbsTimeSocketListener() {
+                    override fun onSuccess(data: String?) {
+                        onUiThread {
+                            DialogUtil.showToast(this@AirCleanActivity, "操作成功!", false)
+                            PreferenceUtils.setInt(HomePreference.POWER_SEEK, current)
+                        }
+                    }
+                    override fun onError(errorCode: Int) {
+                        super.onError(errorCode)
+                        onUiThread {
+                            DialogUtil.showToast(this@AirCleanActivity, "操作失败,请重试!", false)
+                        }
+                    }
+                })
+            }
+        })
     }
 
     override fun onDestroy() {

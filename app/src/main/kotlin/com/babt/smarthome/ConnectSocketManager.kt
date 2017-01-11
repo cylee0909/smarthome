@@ -173,16 +173,12 @@ object ConnectSocketManager {
                                 return
                             }
 
-                            if (SocketManager.isInitSuccess()) {
-                                SocketManager.sendString(command, object : AbsBaseTimeSocketListener() {
-                                    override fun onSuccess(data: String?) {
-                                        super.onSuccess(data)
-                                        socket?.send("#"+id+data+"^\n")
-                                    }
-                                })
-                            } else {
-                                socket?.send("#"+id+"noinit^\n")
-                            }
+                            SocketManager.sendString(command, object : AbsBaseTimeSocketListener() {
+                                override fun onSuccess(data: String?) {
+                                    super.onSuccess(data)
+                                    socket?.send("#" + id + data + "^\n")
+                                }
+                            })
                         }
                     }
                 }

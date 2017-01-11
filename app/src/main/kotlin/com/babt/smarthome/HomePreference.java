@@ -14,6 +14,7 @@ public enum HomePreference implements PreferenceUtils.DefaultValueInterface {
     NET_LOGIN_PASSWD(""),
     NET_LOGIN_ADDRESS(""),
     PM25(null),
+    POWER_SEEK(512),
     AUTO_RUN_SET_PM25(50),
     AUTO_RUN(false),
     AUTO_RUN_TIME(0L),
