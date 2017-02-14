@@ -57,10 +57,6 @@ class MainActivity : AppBaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (!SocketManager.isInitSuccess() && SocketManager.initCount >= 20) {
-            retrySocket()
-        }
-
         if (PreferenceUtils.getBoolean(HomePreference.NEED_VERIFY)) {
             if (!PreferenceUtils.getBoolean(HomePreference.VERIFIED)) {
                 dialogUtil.dismissDialog()

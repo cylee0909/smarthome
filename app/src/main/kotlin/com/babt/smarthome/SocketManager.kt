@@ -18,6 +18,7 @@ import com.cylee.androidlib.thread.Worker
 import com.cylee.androidlib.util.Log
 import com.cylee.androidlib.util.PreferenceUtils
 import com.cylee.androidlib.util.TaskUtils
+import com.cylee.lib.widget.dialog.DialogUtil
 import com.cylee.socket.TimeCheckSocket
 import com.cylee.socket.tcp.BaseTimeSocketListener
 import com.cylee.socket.tcp.ITcpConnectListener
@@ -86,7 +87,7 @@ object SocketManager {
         init()
     }
 
-    fun retry(listener: InitListener) {
+    fun retry(listener: InitListener?) {
         this.listener = listener
         retry = true
         handler?.post(initRunnable)
@@ -98,15 +99,22 @@ object SocketManager {
         }
     }
 
-    fun isInitSuccess(): Boolean {
-        return mDataSocket?.isConnected() ?: false
-    }
-
     class InitRunnable : Runnable {
         override fun run() {
+            if (initCount == 20) {
+                handler?.postDelayed(object : Runnable {
+                    override fun run() {
+                        DialogUtil.showToast(BaseApplication.getApplication(), "与模块连接断开,尝试重连中...", false)
+                        initCount = 0
+                        retry(null)
+                    }
+                }, 10000)
+                return
+            }
+
             handler?.removeCallbacks(this)
             Log.d("init runnable run , initCount = " + initCount)
-            if (retry || (!isInitSuccess() && initCount < 20)) {
+            if (retry || initCount < 20) {
                 retry = false
 //                DialogUtil.showToast(BaseApplication.getApplication(), "发ASKIP请求", false)
                 mAddressSocket?.sendString("ASKIP0", object : TimeCheckSocket.AbsTimeSocketListener() {

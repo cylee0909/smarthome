@@ -3,8 +3,8 @@ package com.babt.smarthome
 import android.content.pm.PackageManager
 import com.babt.smarthome.entity.Rooms
 import com.babt.smarthome.model.AirCleanData
+import com.babt.smarthome.model.ConnectData
 import com.babt.smarthome.model.RoomDetailData
-import com.babt.smarthome.util.EncryptUtil
 import com.baidu.android.common.util.DeviceId
 import com.cylee.androidlib.GsonBuilderFactory
 import com.cylee.androidlib.base.BaseApplication
@@ -16,7 +16,6 @@ import com.cylee.socket.TimeCheckSocket
 import com.cylee.socket.tcp.ITcpConnectListener
 import com.cylee.socket.tcp.TcpSocket
 import com.cylee.socket.tcp.TimeTcpCheckSocket
-import com.babt.smarthome.model.ConnectData
 
 /**
  * Created by cylee on 16/12/15.
@@ -145,7 +144,7 @@ object ConnectSocketManager {
                                 try {
                                     SocketManager.sendString("ASKMB"+HomeUtil.getChannelFromId(idnum.toInt()), object : TimeCheckSocket.AbsTimeSocketListener() {
                                         override fun onSuccess(data: String?) {
-                                            if (data != null && data.matches(Regex("RETMB-MB=8\\d"))) {
+                                            if (data != null && data.matches(Regex("RETMB-MB=[08]\\d"))) {
                                                 var level = (data.get(10) - '0').toInt()
                                                 var detailData = RoomDetailData()
                                                 var env = SocketManager.envData

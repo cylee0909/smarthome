@@ -259,7 +259,7 @@ class RoomDetailActivity : AppBaseActivity() , View.OnClickListener{
             TaskUtils.removePostedWork(this)
             SocketManager.sendString("ASKMB"+getChannelFromPosition(mCurrentId), object : TimeCheckSocket.AbsTimeSocketListener() {
                 override fun onSuccess(data: String?) {
-                    if (data != null && data.matches(Regex("RETMB-MB=8\\d"))) {
+                    if (data != null && data.matches(Regex("RETMB-MB=[08]\\d"))) {
                         var level = (data.get(10) - '0').toInt()
                         onUiThread {
                             refreshLevel(level)
