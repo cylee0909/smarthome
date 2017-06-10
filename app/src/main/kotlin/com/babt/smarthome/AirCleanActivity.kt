@@ -68,6 +68,22 @@ class AirCleanActivity :BaseActivity() , View.OnClickListener {
             view -> onBackPressed()
         }
 
+        find<View>(R.id.shortcut).setOnClickListener {
+            SocketManager.sendString("SETMBG", object : TimeCheckSocket.AbsTimeSocketListener() {
+                override fun onSuccess(data: String?) {
+                    onUiThread {
+                        DialogUtil.showToast(this@AirCleanActivity, "关机成功!", false)
+                    }
+                }
+                override fun onError(errorCode: Int) {
+                    super.onError(errorCode)
+                    onUiThread {
+                        DialogUtil.showToast(this@AirCleanActivity, "操作失败,请重试!", false)
+                    }
+                }
+            })
+        }
+
         var pm = PreferenceUtils.getObject(HomePreference.PM25, Pm25::class.java)
         if (pm != null) {
             mOutPmText?.text = "室外\n"+pm.p+"ug/m3"
