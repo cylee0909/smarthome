@@ -173,11 +173,16 @@ class AirCleanActivity :BaseActivity() , View.OnClickListener {
             }
             R.id.ac_heat_container -> {
                 dialogUtil.showWaitingDialog(this, "正在操作...", true)
-                var command = if (mHeatContainer?.isSelected ?: false) "Close3" else "Open_3"
+                var isOpen = mHeatContainer?.isSelected ?: false;
+                var command = if (isOpen) "Close3" else "Open_3"
                 SocketManager.sendString(command, object : TimeCheckSocket.AbsTimeSocketListener() {
                     override fun onSuccess(data: String?) {
                         onUiThread {
                             dialogUtil.dismissWaitingDialog()
+                            if (!isOpen && TextUtils.equals(data, "NOPEN")) { // 打开
+                                DialogUtil.showToast(this@AirCleanActivity, "打开失败,请先打开面板!", false)
+                                return@onUiThread
+                            }
                             mHeatContainer?.isSelected = !(mHeatContainer?.isSelected ?: false)
                             DialogUtil.showToast(this@AirCleanActivity,
                                     "加热模式已"+(if (mHeatContainer?.isSelected ?: false) "打开" else "关闭")
