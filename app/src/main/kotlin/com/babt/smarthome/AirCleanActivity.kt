@@ -69,15 +69,18 @@ class AirCleanActivity :BaseActivity() , View.OnClickListener {
         }
 
         find<View>(R.id.shortcut).setOnClickListener {
+            dialogUtil.showWaitingDialog(this, "正在操作...", true)
             SocketManager.sendString("SETMBG", object : TimeCheckSocket.AbsTimeSocketListener() {
                 override fun onSuccess(data: String?) {
                     onUiThread {
+                        dialogUtil.dismissWaitingDialog()
                         DialogUtil.showToast(this@AirCleanActivity, "关机成功!", false)
                     }
                 }
                 override fun onError(errorCode: Int) {
                     super.onError(errorCode)
                     onUiThread {
+                        dialogUtil.dismissWaitingDialog()
                         DialogUtil.showToast(this@AirCleanActivity, "操作失败,请重试!", false)
                     }
                 }
