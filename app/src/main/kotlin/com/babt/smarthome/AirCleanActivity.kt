@@ -68,7 +68,7 @@ class AirCleanActivity :BaseActivity() , View.OnClickListener {
             view -> onBackPressed()
         }
 
-        find<View>(R.id.shortcut).setOnClickListener {
+        find<View>(R.id.shutdown).setOnClickListener {
             dialogUtil.showWaitingDialog(this, "正在操作...", true)
             SocketManager.sendString("SETMBG", object : TimeCheckSocket.AbsTimeSocketListener() {
                 override fun onSuccess(data: String?) {
