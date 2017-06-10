@@ -70,7 +70,7 @@ object SocketManager {
             }
         }, object : Worker() {
             override fun work() {
-                if(PreferenceUtils.getBoolean(HomePreference.NET_INITED)) {
+                if(PreferenceUtils.getBoolean(HomePreference.NET_INITED) || AppConfig.debugLocal) {
                     handler?.post(initRunnable)
                 }
             }
@@ -96,6 +96,8 @@ object SocketManager {
     fun sendString(data: String, listener: BaseTimeSocketListener?) {
         if (mDataSocket != null) {
             mDataSocket?.sendString(data, listener)
+        } else {
+            listener?.onError(-1)
         }
     }
 
@@ -116,10 +118,8 @@ object SocketManager {
             Log.d("init runnable run , initCount = " + initCount)
             if (retry || initCount < 20) {
                 retry = false
-//                DialogUtil.showToast(BaseApplication.getApplication(), "发ASKIP请求", false)
                 mAddressSocket?.sendString("ASKIP0", object : TimeCheckSocket.AbsTimeSocketListener() {
                     override fun onError(errorCode: Int) {
-//                        DialogUtil.showToast(BaseApplication.getApplication(), "UDP连接失败", false)
                         initCount++
                         handler?.postDelayed(this@InitRunnable, 500)
                     }
@@ -130,7 +130,6 @@ object SocketManager {
 
                     override fun onRawData(rawData: DatagramPacket?) {
                         if (rawData != null) {
-//                            DialogUtil.showToast(BaseApplication.getApplication(), "ip连接: "+rawData.address.hostAddress, false)
                             mDataSocket = TimeTcpCheckSocket(true)
                             try {
                                 mDataSocket?.connect(rawData.address.hostAddress, 8000, object : ITcpConnectListener {
@@ -144,7 +143,6 @@ object SocketManager {
                                     }
 
                                     override fun onConnectFail(errCode: Int) {
-//                                    DialogUtil.showToast(BaseApplication.getApplication(), "TCP连接失败 : "+errCode, false)
                                         initCount++
                                         handler?.postDelayed(this@InitRunnable, 500)
                                     }

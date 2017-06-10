@@ -96,7 +96,7 @@ class AddTimeActivity : BaseActivity() , View.OnClickListener{
                         this,
                         object : TimePickerDialog.OnTimeSetListener {
                             override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-                                setTime = hourOfDay.toString() + ":"+minute.toString()
+                                setTime = String.format("%02d", hourOfDay)+ ":"+String.format("%02d", minute)
                                 timeText?.text = setTime
                             }
                         },

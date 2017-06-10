@@ -3,12 +3,9 @@ package com.cylee.socket.tcp;
 import com.cylee.androidlib.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 /**
  * Created by cylee on 16/9/25.
@@ -109,6 +106,7 @@ public class TimeTcpCheckSocket extends TcpSocket {
     @Override
     protected void onReceive(String receiveData) {
         super.onReceive(receiveData);
+        Log.d("onReceive data = "+receiveData);
         if (receiveData != null && receiveData.length() > 2) {
             String id = receiveData.substring(0, 2);
             PacketBindData pb = mBindDataMap.get(id);

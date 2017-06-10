@@ -26,9 +26,10 @@ class App : BaseApplication() {
         lock?.acquire()
 
         Config.setHost(AppConfig.config.serverHttpUrl)
-        Log.setLogLevel(if (BuildConfig.DEBUG) Log.OFF else Log.OFF)
+        Log.setLogLevel(if (BuildConfig.DEBUG) Log.VERBOSE else Log.OFF)
         bindSocket()
         redirectLog()
+        ConnectSocketManager.initConnect()
     }
 
     fun bindSocket() {

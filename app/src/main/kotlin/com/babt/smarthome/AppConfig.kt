@@ -5,6 +5,7 @@ package com.babt.smarthome
  */
 class AppConfig {
     companion object {
+        var debugLocal = BuildConfig.DEBUG && true;
         var envLocal = Env("http://192.168.31.103:8990/", "192.168.31.103", 8989)
         var envServer = Env("http://115.47.58.102:8990/", "115.47.58.102", 8989)
         var config = if (BuildConfig.DEBUG) envLocal else envServer
